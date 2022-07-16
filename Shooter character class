@@ -99,6 +99,7 @@ void AShooterCharacter::Tick( float DeltaTime )
 // Called to bind functionality to input
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
+    Super::SetupPlayerInputComponent(PlayerInputComponent) ;
     check(PlayerInputComponent);
 
     // Set up "movement" bindings.
@@ -112,13 +113,23 @@ void AFPSCharacter::MoveForward(float Value)
 {
     if((Controller! = nullptr) && (Value! = 0.0f)) 
     {
+    // Find Wich Way is Forward
+     const FRotator Rotation{Controller->GetControlRotation()};
+     const FRotator YawRotation{0,Rotation.Yaw,0};
      
+     const FVector Direction{FRotationmatrix{YawRotation}.GetUnitAxis(EAxis::X)};
+     AddMovementInput(Direction, Value);
     }
 }
 
 void AFPSCharacter::MoveRight(float Value)
 {
-
+// Find Wich Way is Right
+     const FRotator Rotation{Controller->GetControlRotation()};
+     const FRotator YawRotation{0,Rotation.Yaw,0};
+     
+     const FVector Direction{FRotationmatrix{YawRotation}.GetUnitAxis(EAxis::Y)};
+     AddMovementInput(Direction, Value);
 }
 
 
