@@ -1,4 +1,4 @@
-   /* Header File */
+                /* Header File */
 
 #pragma once
 
@@ -13,3 +13,34 @@ class Shooter_API UShooterAnimInstance : public UAnimInstance
   GENERATED_BODY()
 
 };
+
+public:
+   UFunction(BluePrintCallable)
+   Void UpdateAnimationProperties(float DeltaTime) ;
+   
+   Virtual Void NativeInitializeAnimation() ;
+
+
+
+
+
+
+              /** CPP File  **/
+ 
+ 
+ 
+ #include "shooterAnimInstance.h"
+ 
+ 
+ void UShootetAnimInstance::UpdateAnimationProperties(float DeltaTime)
+ {
+ 
+ }
+ 
+ void UShooterAnimInstance::NativeInitializeAnimation() 
+ {
+ 
+ }
+
+
+
