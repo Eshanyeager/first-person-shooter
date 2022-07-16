@@ -37,10 +37,10 @@ private:
     
 Public:
     //returns CameraBoom subobject
-    ForceInline USpringArmComponent* GetCameraBoom() const{return CameraBoom;}
+    ForceInline USpringArmComponent* GetCameraBoom() const {return CameraBoom;}
     
     //returns FollowCamera Subobject
-    ForceInline UCameraComponent* GetFollowCamera() const{return FollowCamera;}
+    ForceInline UCameraComponent* GetFollowCamera() const {return FollowCamera;}
     
     
     // Handles input for moving forward and backward.
