@@ -48,6 +48,14 @@ private:
     UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true) ) 
     class UAnimMontage* FireMontage;
     
+    // Spawning impact particles on bullet hit
+    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
+    class UParticleSystem* ImpactParticles;
+    
+    // spawning beam trails
+    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)
+    class UParticleSystem* BeamParticles;
+    
 Public:
     //returns CameraBoom subobject
     ForceInline USpringArmComponent* GetCameraBoom() const {return CameraBoom;}
@@ -80,6 +88,7 @@ Public:
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 #include "Engine/SkeletalMeshSocket.h"
+#include "Particles/ParticleSystemComponent.h"
 
 
 
@@ -94,6 +103,7 @@ AShooterCharacter::AShooterCharacter()
     CameraBoom->SetupAttachment(RootComponent);
     CameraBoom->TargetArmLength = 300.f; // Camera Follows at this distance behind the character
     CameraBoom->bUsePawnControlRotation = true; // rotates the arm based on controller
+    CameraBoom->SocketOffset = FVector(0.f, 50.f, 50.f);
 
     // create FollowCamera
     FollowCamera = CreateDefaultSubobject<UCameraComponent>(text("FollowCamera"))
@@ -189,6 +199,21 @@ void AShooterCharacter::FireButton()
      {
        AnimInstanace->Montage_Play(FireMontage);
        AnimInstanace->Montage_JumptToSection(FName("StartFire")) ;
+     }
+     
+     if(BeamParticles)
+     {
+       UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(
+       GetWorld(), 
+       BeamParticles, 
+       SocketTransform);
+       
+       if(Beam) // Spawning Beam Trails From Barrel
+       {
+        Beam->SetVectorParameter(FName("Target"), BeamParticles);
+       }
+       
+       
      }
      
 }
