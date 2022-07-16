@@ -5,8 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "ShooterCharacter.generated.h"
-#include "Kismet/GameplayStatics.h"
-#include "Sound/SoundCue.h"
+
 
 UCLASS()
 class ShooterCharacterPROJECT_API AShooterCharacter : public ACharacter
@@ -38,8 +37,12 @@ private:
     class UCameraComponent* FollowCamera;
     
     // sound for firing weapon
-    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true)
+    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)
     class USoundCue* FireSound;
+    
+    // Spawning Flash At Tip of BarrelSocket
+    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)
+    class UParticleSystem* MuzzleFlash;
     
 Public:
     //returns CameraBoom subobject
@@ -70,6 +73,9 @@ Public:
 #include "ShooterCharacter.h"
 #include "GameFrameWork/SpringArmComponent.h"
 #include "Camera/CameraComponent.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
+
 
 // Sets default values
 AShooterCharacter::AShooterCharacter()
@@ -160,6 +166,12 @@ void AShooterCharacter::FireButton()
     if(FireSound) 
      {
        UGameplayStatics::PlaySound2D(this, FireSound);
+     }
+     
+     const UskeletalMeshSocket* BarrelSocket = GetMesh()->GetSocketByName("BarrelSocket");
+     if(BarrelSocket) 
+     {
+      const FTransform SocketTransform = BarrelSocket->GetSocketTransform(GetMesh());
      }
 }
 
