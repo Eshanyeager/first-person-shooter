@@ -27,10 +27,11 @@ public:
     virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
 
 private:
-    //camera positioning behind th character
+    //camera positioning behind the character
     UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true)) 
     class USpringArmComponent* CameraBoom;
    
+    //Camera That Follows Character
     UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true)
     class UCameraComponent* FollowCamera;
     
