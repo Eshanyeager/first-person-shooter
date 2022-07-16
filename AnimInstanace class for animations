@@ -20,8 +20,22 @@ public:
    
    Virtual Void NativeInitializeAnimation() ;
 
-
-
+private:
+    UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true)) 
+    class AShooterCharacter* ShooterCharacter;
+    
+    /* speed of character */
+    UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true))
+    float Speed;
+    
+    /* whether or not character is moving
+    UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true))
+    bool bIsAccelerating;
+    
+    /* whether is in air or not */
+    UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true))
+    bool bIsInAir;
+    
 
 
 
@@ -30,16 +44,49 @@ public:
  
  
  #include "shooterAnimInstance.h"
+ #include "GameFrameWork/CharacterMovementComponent.h"
  
  
  void UShootetAnimInstance::UpdateAnimationProperties(float DeltaTime)
  {
- 
+  if(ShooterCharacter == nullptr)
+   {
+     ShooterCharacter = cast<AShooterCharacter>(TryGetPawnOwner());
+   }
+   
+   
+   if(ShooterCharacter) 
+   {
+     /* get speed of the character from velocity */
+     FVector Velocity {ShooterCharacter->GetVelocity()};
+     Velocity.z = 0;
+     Speed = Velocity.Size();
+    
+    
+     /** is character in the air? */
+     bIsInAir = ShooterCharacter->GetCharacterMovement->IsFalling();
+    
+    
+    
+     /** is character accelerating? */
+     if(ShooterCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size()>0.f) 
+      {
+         bIsAccelerating = true;
+      }
+     else
+      {
+         bIsAccelerating = false;
+      }
+   
+   }
+   
+   
  }
+
  
  void UShooterAnimInstance::NativeInitializeAnimation() 
  {
- 
+  ShooterCharacter = cast<AShooterCharacter>(TryGetPawnOwner());
  }
 
 
