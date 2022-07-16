@@ -109,7 +109,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     PlayerInputComponent->BindAction("Jump") , IE_Released, this, &ACharacter::StopJumping) ;
 }
 
-void AFPSCharacter::MoveForward(float Value)
+void AShooterCharacter::MoveForward(float Value)
 {
     if((Controller! = nullptr) && (Value! = 0.0f)) 
     {
@@ -122,7 +122,7 @@ void AFPSCharacter::MoveForward(float Value)
     }
 }
 
-void AFPSCharacter::MoveRight(float Value)
+void AShooterCharacter::MoveRight(float Value)
 {
 // Find Wich Way is Right
      const FRotator Rotation{Controller->GetControlRotation()};
