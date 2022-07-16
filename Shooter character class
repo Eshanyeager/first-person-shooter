@@ -86,8 +86,8 @@ AShooterCharacter::AShooterCharacter()
     bUseControllerRotationYaw = false;
     
     /** Configure the Character Movement */
-    GetcharacterMovement()->bOrientRotationToMovement = false;
-    GetCharacterMovement()->RotationRate = FRotator(0.f, 540.f, 0.f);
+    GetcharacterMovement()->bOrientRotationToMovement = false; // character moves in the direction of input
+    GetCharacterMovement()->RotationRate = FRotator(0.f, 540.f, 0.f); // rotation at this rate
     GetCharacterMovement()->JumpZVelocity = 300.f;
     GetcharacterMovement()->AirControl = 0.2f;
     
