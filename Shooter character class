@@ -7,7 +7,7 @@
 #include "ShooterCharacter.generated.h"
 
 UCLASS()
-class FPSPROJECT_API AShooterCharacter : public ACharacter
+class ShooterCharacterPROJECT_API AShooterCharacter : public ACharacter
 {
     GENERATED_BODY()
 
