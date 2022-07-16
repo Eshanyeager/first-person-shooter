@@ -50,7 +50,7 @@ Public:
     // Handles input for moving right and left.
     UFUNCTION()
     void MoveRight(float Value);
-
+   
 };
 
 
@@ -90,11 +90,16 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     // Set up "movement" bindings.
     PlayerInputComponent->BindAxis("MoveForward", this, &AShooterCharacter::MoveForward);
     PlayerInputComponent->BindAxis("MoveRight", this, &AShooterCharacter::MoveRight);
+    PlayerInputComponent->BindAction("Jump") , IE-Pressed, this, &ACharacter::Jump) ;
+    PlayerInputComponent->BindAction("Jump") , IE_Released, this, &ACharacter::StopJumping) ;
 }
 
 void AFPSCharacter::MoveForward(float Value)
 {
-    
+    if((Controller! = nullptr) && (Value! = 0.0f)) 
+    {
+     
+    }
 }
 
 void AFPSCharacter::MoveRight(float Value)
