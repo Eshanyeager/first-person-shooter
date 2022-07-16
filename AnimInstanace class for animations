@@ -1,1 +1,15 @@
+   /* Header File */
 
+#pragma once
+
+#include "CoreMinimal.h"
+#include "Animation/AnimInstance.h"
+#include "ShooterAnimInstance.generated.h"
+
+
+UCLASS()
+class Shooter_API UShooterAnimInstance : public UAnimInstance
+{
+  GENERATED_BODY()
+
+};
