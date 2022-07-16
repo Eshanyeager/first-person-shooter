@@ -50,6 +50,9 @@ Public:
     // Handles input for moving right and left.
     UFUNCTION()
     void MoveRight(float Value);
+    
+    // called when fire button is pressed
+    void FireButton() ;
    
 };
 
@@ -118,6 +121,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     PlayerInputComponent->BindAxis("MoveRight", this, &AShooterCharacter::MoveRight);
     PlayerInputComponent->BindAction("Jump") , IE-Pressed, this, &ACharacter::Jump) ;
     PlayerInputComponent->BindAction("Jump") , IE_Released, this, &ACharacter::StopJumping) ;
+    PlayerInputComponent->BindAction("FireButton") , IE_Pressed, this, &AShooterCharacter::FireButton);
+    
 }
 
 void AShooterCharacter::MoveForward(float Value)
@@ -141,6 +146,12 @@ void AShooterCharacter::MoveRight(float Value)
      
      const FVector Direction{FRotationmatrix{YawRotation}.GetUnitAxis(EAxis::Y)};
      AddMovementInput(Direction, Value);
+}
+
+
+void AShooterCharacter::FireButton() 
+{
+ 
 }
 
 
