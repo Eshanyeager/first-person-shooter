@@ -1,5 +1,55 @@
     /* Header File */
 
+#pragma once
 
+#include "CoreMinimal.h"
+#include "GameFramework/Character.h"
+#include "ShooterCharacter.generated.h"
+
+UCLASS()
+class FPSPROJECT_API AShooterCharacter : public ACharacter
+{
+    GENERATED_BODY()
+
+public:
+    // Sets default values for this character's properties
+    ShooterCharacter();
+
+protected:
+    // Called when the game starts or when spawned
+    virtual void BeginPlay() override;
+
+public:
+    // Called every frame
+    virtual void Tick( float DeltaTime ) override;
+
+    // Called to bind functionality to input
+    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+
+private:
+    //camera positioning behind th character
+    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true)) 
+    class USpringArmComponent* CameraBoom;
+   
+    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true)
+    class UCameraComponent* FollowCamera;
+    
+Public:
+    //returns CameraBoom subobject
+    ForceInline USpringArmComponent* GetCameraBoom() const{return CameraBoom;}
+    
+    //returns FollowCamera Subobject
+    ForceInline USpringArmComponent* GetFollowCamera() const{return FollowCamera;}
+    
+    
+    // Handles input for moving forward and backward.
+    UFUNCTION()
+    void MoveForward(float Value);
+
+    // Handles input for moving right and left.
+    UFUNCTION()
+    void MoveRight(float Value);
+
+};
 
 
