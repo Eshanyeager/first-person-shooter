@@ -5,6 +5,8 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
 #include "ShooterCharacter.generated.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
 
 UCLASS()
 class ShooterCharacterPROJECT_API AShooterCharacter : public ACharacter
@@ -34,6 +36,10 @@ private:
     //Camera That Follows Character
     UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true)
     class UCameraComponent* FollowCamera;
+    
+    // sound for firing weapon
+    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true)
+    class USoundCue* FireSound;
     
 Public:
     //returns CameraBoom subobject
@@ -151,7 +157,10 @@ void AShooterCharacter::MoveRight(float Value)
 
 void AShooterCharacter::FireButton() 
 {
- 
+    if(FireSound) 
+     {
+       UGameplayStatics::PlaySound2D(this, FireSound);
+     }
 }
 
 
