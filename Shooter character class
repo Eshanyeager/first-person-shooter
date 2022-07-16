@@ -40,7 +40,7 @@ Public:
     ForceInline USpringArmComponent* GetCameraBoom() const{return CameraBoom;}
     
     //returns FollowCamera Subobject
-    ForceInline USpringArmComponent* GetFollowCamera() const{return FollowCamera;}
+    ForceInline UCameraComponent* GetFollowCamera() const{return FollowCamera;}
     
     
     // Handles input for moving forward and backward.
