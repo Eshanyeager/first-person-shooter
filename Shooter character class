@@ -85,7 +85,7 @@ void AShooterCharacter::Tick( float DeltaTime )
 // Called to bind functionality to input
 void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
-    Super::SetupPlayerInputComponent(PlayerInputComponent);
+    check(PlayerInputComponent);
 
     // Set up "movement" bindings.
     PlayerInputComponent->BindAxis("MoveForward", this, &AShooterCharacter::MoveForward);
