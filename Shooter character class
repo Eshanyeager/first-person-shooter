@@ -75,6 +75,8 @@ Public:
 #include "Camera/CameraComponent.h"
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
+#include "Engine/SkeletalMeshSocket.h"
+
 
 
 // Sets default values
@@ -172,6 +174,10 @@ void AShooterCharacter::FireButton()
      if(BarrelSocket) 
      {
       const FTransform SocketTransform = BarrelSocket->GetSocketTransform(GetMesh());
+     }
+     if(MuzzleFlash) 
+     {
+       UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SocketTransform);
      }
 }
 
