@@ -126,6 +126,11 @@ Public:
     
     void CalculateCrosshairSpread(float DeltaTime);
     
+    void ShootTimeDuration() ;
+    bool bFiringBullet;
+    
+    FTimerHandle CrosshairShootTimer;
+    
     
 };
 
@@ -151,17 +156,21 @@ AShooterCharacter::AShooterCharacter() :
 
 // Sets Value for Camera Field Of View
 bAiming(false);
-CameraDefaultFov(0.f); // Set in BeginPlay
-CameraZoomedFov(60.f);
-InterpSpeed(20.f);
+CameraDefaultFov(0.f), // Set in BeginPlay
+CameraZoomedFov(60.f), 
+InterpSpeed(20.f), 
 CameraCurrentFov(0.f);
 
 // Crosshair Spread Value
-CrosshairSpreadMultiplier(0.f);
-CrosshairVelocityFactor(0.f) ;
-CrosshairIsInAirFactor(0.f);
-CrosshairAimFactor(0.f);
+CrosshairSpreadMultiplier(0.f), 
+CrosshairVelocityFactor(0.f), 
+CrosshairIsInAirFactor(0.f), 
+CrosshairAimFactor(0.f), 
 CrosshairShootingFactor(0.f);
+
+// Bullet Fire Timer Variables
+ShootTimeDuration(0.05f), 
+bFiringBullet(false) ;
 
 {
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
