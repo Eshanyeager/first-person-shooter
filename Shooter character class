@@ -167,7 +167,7 @@ void AShooterCharacter::BeginPlay()
     
 }
 
-void AShooterCharacter::CameraInterpZoom()
+void AShooterCharacter::CameraInterpZoom(float DeltaTime)
 {
    if(bAiming) 
    {
