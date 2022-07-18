@@ -77,6 +77,20 @@ Public:
     
     bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation) ;
    
+    // Aiming Button for Zooming
+    bool bAiming;
+    
+    // Camera set default Field of View value
+    float CameraDefaultFov;
+    
+    // Camera Value for Zoomed FOV
+    float CameraZoomedFov;
+    
+    // Aiming When Button Pressed
+    void AimingButtonPressed();
+    
+    // Stop Aiming When Button Released
+    void AimningButtonReleased();
 };
 
 
@@ -95,7 +109,12 @@ Public:
 
 
 // Sets default values
-AShooterCharacter::AShooterCharacter()
+AShooterCharacter::AShooterCharacter() :
+
+bAiming(false);
+CameraDefaultFov(0.f); // Set in BeginPlay
+CameraZoomedFov(60.f);
+
 {
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
@@ -130,7 +149,12 @@ AShooterCharacter::AShooterCharacter()
 void AShooterCharacter::BeginPlay()
 {
     Super::BeginPlay();
-
+    
+    if(FollowCamera) 
+    {
+      CameraDefaultFov = GetFollowCamera()->FieldOfView;
+    }
+    
 }
 
 // Called every frame
@@ -152,6 +176,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     PlayerInputComponent->BindAction("Jump") , IE-Pressed, this, &ACharacter::Jump) ;
     PlayerInputComponent->BindAction("Jump") , IE_Released, this, &ACharacter::StopJumping) ;
     PlayerInputComponent->BindAction("FireButton") , IE_Pressed, this, &AShooterCharacter::FireButton);
+    PlayerInputComponent->BindAction("AimingButton") , IE-Pressed, this, &AShooterCharafter::AimingButtonPressed) ;
+    PlayerInputComponent->BindAction("AimingButton") , IE_Released, this, &AShooterCharacter::AimingButtonReleased) ;
     
 }
 
@@ -285,9 +311,18 @@ return False;
 }
 
 
+void AShooterCharacter::AimingbuttonPressed() 
+{ 
+      bAiming = true;
+      GetFollowCamera()->SetFieldOfView(CameraZoomedFov);
+}
 
 
-
+void AShooterCharacter::AimingbuttonReleased() 
+{ 
+      bAiming = false;
+      GetFollowCamera()->SetFieldOfView(CameraDefaultFov);
+}
 
 
 
