@@ -402,16 +402,41 @@ void AShooterCharacter::GetCrosshairSpreadMultiplier()
 
 void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime) 
 {
+   
    FVector2D WalkSpeedRange{ 0.f, 600.f}
    FVector2D VelocityMultiPlierRange{ 0.f, 1.f};
    FVector Velocity { GetVelocity ()};
    Velocity.Z = 0.f;
+   // Calculate Crosshair Velocity Factor
    CrosshairVelocityFactor = Fmath::GetMappedRangeValueClamped(
    WalkSpeedRange,
    VelocityMultiplierRange, 
    Velocity.Size()) ;
    
-   CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor;
+   // Calculate Crosshair In Air Factor
+   if(GetCharacterMovent()->isFalling()) // Is In Air? 
+   {
+   // Spread Crosshair Slowly In Air
+     CrosshairIsInAirFactor = FMath::InterpTo(
+     CrosshairIsInAirFactor, 
+     2.25f, 
+     DeltaTime, 
+     2.25f);
+   }
+   else // Character on Ground
+   {
+   // Shrink Crosshair on geound
+     CrosshairIsInAirFactor = FMath::InterpTo(
+     CrosshairIsInAirFactor, 
+     0.f, 
+     DeltaTime, 
+     2.25f);
+   }
+     
+   CrosshairSpreadMultiplier = 
+   0.5f + 
+   CrosshairVelocityFactor+
+   CrosshairIsInAirFactor ;
 }
 
 
