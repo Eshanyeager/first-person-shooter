@@ -43,7 +43,12 @@ private:
     // OffsetYaw for the frame before we stop moving
     UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true))
     float LastMovementoffsetYaw;
-
+    
+    UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true))
+    bool bAiming;
+     
+     
+     
 
 
               /** CPP File  **/
@@ -97,6 +102,7 @@ private:
         {
          LastMovementoffsetYaw = MovementoffsetYaw;
         }
+        bAiming = ShooterCharacter->GetAiming();
     }
  
  }
