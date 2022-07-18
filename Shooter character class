@@ -103,8 +103,10 @@ Public:
 
 
 
-
-/* Cpp File  */
+/***********************/
+    /* Cpp File  */
+/***********************/ 
+    
 
 #include "ShooterCharacter.h"
 #include "GameFrameWork/SpringArmComponent.h"
@@ -163,6 +165,7 @@ void AShooterCharacter::BeginPlay()
     if(FollowCamera) 
     {
       CameraDefaultFov = GetFollowCamera()->FieldOfView;
+      CameraCurrentFov = CameraDefaultFov;
     }
     
 }
