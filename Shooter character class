@@ -207,6 +207,7 @@ void AShooterCharacter::FireButton()
      bool bBeamEnd = GetBeamEndLocation(SocketTransform.Location(), BeamEnd);
      if(bBeamEnd) 
      {
+     // Spawn Impact Particles after updating beam end poin
        UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Impactparticles, BeamEnd) 
      }
      
@@ -256,10 +257,10 @@ Void AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, 
         End, 
         ECollisionChannel::ECC_Visiblity);
         
-        if(ScreenTraceHit.bBloclingHit) //was there a trace hit? 
+        if(ScreenTraceHit.bBlockingHit) //was there a trace hit? 
         {
         // Beam End Point Now Is Trace Hit Location
-         OutBeamLocation.ScreenTraceHit.Location;
+         OutBeamLocation = ScreenTraceHit.Location;
         }
       
         // Perform Second Trace, This Time From The Gun Barrel
@@ -276,7 +277,7 @@ Void AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, 
          
          if(WeaponTraceHit.bBlockingHit)
          {
-          OutBeamLocation = WeaponTraceHit. Location; // Object Between Barrel and BeamEndPoint? 
+          OutBeamLocation = WeaponTraceHit.Location; // Object Between Barrel and BeamEndPoint? 
          }     
          return true;
       }
