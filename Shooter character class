@@ -74,6 +74,8 @@ Public:
     
     // called when fire button is pressed
     void FireButton() ;
+    
+    bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation) ;
    
 };
 
@@ -201,21 +203,35 @@ void AShooterCharacter::FireButton()
        AnimInstanace->Montage_JumptToSection(FName("StartFire")) ;
      }
      
-     if(BeamParticles)
+     FVector BeamEnd;
+     bool bBeamEnd = GetBeamEndLocation(SocketTransform.Location(), BeamEnd);
+     if(bBeamEnd) 
      {
-       UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(
-       GetWorld(), 
-       BeamParticles, 
-       SocketTransform);
-       
-       if(Beam) // Spawning Beam Trails From Barrel
-       {
-        Beam->SetVectorParameter(FName("Target"), BeamParticles);
-       }
-       
-       
+       UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Impactparticles, BeamEnd) 
      }
      
+     UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BeamParticles, SocketTransform);
+     if(Beam) 
+     {
+       Beam->SetVectorParameter(FName("Target"), BeamEnd); 
+     }  
 }
 
 
+Void AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
+{
+     FVector2D ViewPortSize;
+     if(GEngine && GEngine->ViewportSize) 
+     {
+      GEngine->ViewPortSize->GetViewPortSize(ViewPortSize);
+     }
+
+
+
+
+
+
+
+
+return False;
+}
