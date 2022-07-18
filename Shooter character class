@@ -242,32 +242,65 @@ Void AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, 
      
      if(bScreenToWorld)  // was deprojection Successful? 
      {
-      FHitResult ScreenTraceHit;
-      const FVector Start{CrosshairWorldPosition};
-      const FVector End{CrosshairWorlePosition+CrosshairworldDirection*50'000};
+        FHitResult ScreenTraceHit;
+        const FVector Start{CrosshairWorldPosition};
+        const FVector End{CrosshairWorlePosition+CrosshairworldDirection*50'000};
       
-      // Set Beam End Point To the Line Trace End Point
-      OutBeamLocation = End;
+        // Set Beam End Point To the Line Trace End Point
+        OutBeamLocation = End;
       
-      // Trace OutWord From Cross Hair Location
-      GetWorld->LineTraceSingleByChannel(
-      ScreenTraceHit, 
-      Start, 
-      End, 
-      ECollisionChannel::ECC_Visiblity);
+        // Trace OutWord From Cross Hair Location
+        GetWorld->LineTraceSingleByChannel(
+        ScreenTraceHit, 
+        Start, 
+        End, 
+        ECollisionChannel::ECC_Visiblity);
+        
+        if(ScreenTraceHit.bBloclingHit) //was there a trace hit? 
+        {
+        // Beam End Point Now Is Trace Hit Location
+         OutBeamLocation.ScreenTraceHit.Location;
+        }
       
-      if(ScreenTraceHit) //was there a trace hit? 
-      {
-      // Beam End Point Now Is Trace Hit Location
-       OutBeamLocation.ScreenTraceHit.Location;
+        // Perform Second Trace, This Time From The Gun Barrel
+         FHitResult WeaponTraceHit;
+         const FVECTOR WeaponTraceStart{ MuzzleSocketLocation};
+         const FVector WeaponTraceEnd{ OutBeamLocation};
+         
+         GetWorld()->LineTraceSingleByChannel(
+         WeaponTraceHit, 
+         WeaponTraceStart, 
+         WeaponTraceEnd, 
+         ECollisionChannel::ECC_Visibility) ;
+         
+         
+         if(WeaponTraceHit.bBlockingHit)
+         {
+          OutBeamLocation = WeaponTraceHit. Location; // Object Between Barrel and BeamEndPoint? 
+         }     
+         return true;
       }
-      
-      // Perform Second Trace, This Time From The Gun Barrel
-      
-
-
-
-
-
 return False;
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
