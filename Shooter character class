@@ -100,6 +100,33 @@ Public:
     float InterpSpeed
     
     void CameraInterpZoom(float DeltaTime);
+    
+    // Multiplier Component For Cross hair Spread
+    UPorpety(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs") 
+    float CrosshariSpreadMultiplier;
+    
+    // Velocity component for cross hair spread
+    UPorpety(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
+    float CrosshairVelocityFactor;
+    
+    // Is In Air Component for Crosshair spread
+    UPorpety(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
+    float CrosshairIsInAirFactor;
+    
+    // Aim Component For Crosshair spread
+    UPorpety(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
+    float CrosshairAimFactor;
+    
+    // Shooting Component for Crosshair spread
+    UPorpety(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
+    float CrosshairShootingFactor;
+    
+    UFunction() 
+    void GetCrosshairSpreadMultiplier();
+    
+    void CalculateCrosshairSpread(float DeltaTime);
+    
+    
 };
 
 
@@ -202,6 +229,9 @@ void AShooterCharacter::Tick( float DeltaTime )
     
     // Handlee Interpolation for zoom in
     CameraInterpZoom(DeltaTime) ;
+    
+    
+    CalculateCrosshairSpread(DeltaTime) ;
 
 }
 
@@ -365,6 +395,24 @@ void AShooterCharacter::AimingbuttonReleased()
       
 }
 
+void AShooterCharacter::GetCrosshairSpreadMultiplier()
+{
+   return CrosshairSpreadMultiplier;
+}
+
+void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime) 
+{
+   FVector2D WalkSpeedRange{ 0.f, 600.f}
+   FVector2D VelocityMultiPlierRange{ 0.f, 1.f};
+   FVector Velocity { GetVelocity ()};
+   Velocity.Z = 0.f;
+   CrosshairVelocityFactor = Fmath::GetMappedRangeValueClamped(
+   WalkSpeedRange,
+   VelocityMultiplierRange, 
+   Velocity.Size()) ;
+   
+   CrosshairSpreadMultiplier = 0.5f + CrosshairVelocityFactor;
+}
 
 
 
