@@ -63,6 +63,7 @@ Public:
     //returns FollowCamera Subobject
     ForceInline UCameraComponent* GetFollowCamera() const {return FollowCamera;}
     
+    ForceInline bool GetAiming() const { return bAiming };
     
     // Handles input for moving forward and backward.
     UFUNCTION()
