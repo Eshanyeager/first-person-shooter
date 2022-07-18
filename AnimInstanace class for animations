@@ -36,6 +36,13 @@ private:
     UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true))
     bool bIsInAir;
     
+    // OffsetYaw for Stafing
+    UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true))
+    float MovementoffsetYaw;
+    
+    // OffsetYaw for the frame before we stop moving
+    UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true))
+    float LastMovementoffsetYaw;
 
 
 
@@ -49,38 +56,49 @@ private:
  
  void UShootetAnimInstance::UpdateAnimationProperties(float DeltaTime)
  {
-  if(ShooterCharacter == nullptr)
-   {
-     ShooterCharacter = cast<AShooterCharacter>(TryGetPawnOwner());
-   }
+    if(ShooterCharacter == nullptr)
+     {
+       ShooterCharacter = cast<AShooterCharacter>(TryGetPawnOwner());
+     }
    
    
-   if(ShooterCharacter) 
-   {
-     /* get speed of the character from velocity */
-     FVector Velocity {ShooterCharacter->GetVelocity()};
-     Velocity.z = 0;
-     Speed = Velocity.Size();
+    if(ShooterCharacter) 
+    {
+       /* get speed of the character from velocity */
+       FVector Velocity {ShooterCharacter->GetVelocity()};
+       Velocity.z = 0;
+       Speed = Velocity.Size();
     
     
-     /** is character in the air? */
-     bIsInAir = ShooterCharacter->GetCharacterMovement->IsFalling();
+       /** is character in the air? */
+       bIsInAir = ShooterCharacter->GetCharacterMovement->IsFalling();
     
     
     
-     /** is character accelerating? */
-     if(ShooterCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size()>0.f) 
-      {
-         bIsAccelerating = true;
-      }
-     else
-      {
-         bIsAccelerating = false;
-      }
-   
-   }
-   
-   
+       /** is character accelerating? */
+       if(ShooterCharacter->GetCharacterMovement()->GetCurrentAcceleration().Size()>0.f) 
+        {
+           bIsAccelerating = true;
+        }
+       else
+        {
+           bIsAccelerating = false;
+        }
+        
+        FRotator AimRotation = Shootercharacter->GetBaseAimRotation();
+        
+        FRotator MovementRotation = UKismetMathLibrary::MakeRotFromX(ShooterCharacter->GetVelocity()) ;
+        
+        MovemenoffsetYaw = UKismetMathLibrary::NormalizeDeltaRotator(
+        MovementRotation, 
+        AimRotation).Yaw;
+        
+        if(ShootetCharacter->GetVelocity.Size()>0.f) 
+        {
+         LastMovementoffsetYaw = MovementoffsetYaw;
+        }
+    }
+ 
  }
 
  
