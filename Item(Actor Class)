@@ -32,6 +32,10 @@ private:
     UProperty(EditAnywhere, BluePrintReadOnly, Category "Item", mera = (AllowPrivateAccess))
     class USkeletalMeshComponent* ItemMesh;
     
+    // Popup Widget when the player looks at item
+    UProperty(EditAnywhere, BluePrintReadOnly, Category "Item", mera = (AllowPrivateAccess))
+    class UWidgetComponent* PickupWidget;
+   
 public:
 
 } 
@@ -44,6 +48,8 @@ public:
 
 
 #include "Item.h"
+#include "Components/BoxComponent.h"
+#include "Components/WidgetComponentComponent.h"
 
 
 //Sets Default value
@@ -58,6 +64,8 @@ AItem()::AItem()
    CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
    CollisionBox->SetupAttachment(ItemMesh);
   
+   PickupWidget = CreateDefaultSubobject<UWidgetComponentComponent>(TEXT("PickupWidget"));
+   PickupWidget->SetupAttachment(GetRootComponent());
 }
 
 
