@@ -292,7 +292,7 @@ void AShooterCharacter::Tick( float DeltaTime )
       if(HitItem && HitItem->GetPickupwidget())
       { 
         //Show Pickup Widget
-        PickUpWidget->SetVisiblity(true);
+        HitItem->GetPickUpWidget()->SetVisiblity(true);
       } 
     }
 }
