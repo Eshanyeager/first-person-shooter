@@ -96,7 +96,7 @@ Public:
     // Current CameraFov Value
     float CameraCurrentFov;
     
-    // Interpretation while Zooming
+    // Interpolation while Zooming
     float InterpSpeed
     
     void CameraInterpZoom(float DeltaTime);
@@ -121,7 +121,7 @@ Public:
     UPorpety(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
     float CrosshairShootingFactor;
     
-    UFunction() 
+    UFUNCTION() 
     void GetCrosshairSpreadMultiplier();
     
     void CalculateCrosshairSpread(float DeltaTime);
@@ -130,6 +130,11 @@ Public:
     bool bFiringBullet;
     
     FTimerHandle CrosshairShootTimer;
+    
+    void StarCrosshairBulletFire() ;
+    
+    UFUNCTION() 
+    void FinishCrosshaieBulletFire() ;
     
     
 };
@@ -329,7 +334,9 @@ void AShooterCharacter::FireButton()
      if(Beam) 
      {
        Beam->SetVectorParameter(FName("Target"), BeamEnd); 
-     }  
+     } 
+     // Start Bullet Fire Timer For Crosshair 
+     StartCrosshairBulletFire() ;
 }
 
 
@@ -344,7 +351,6 @@ Void AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, 
      
      // Get Screen Space Location Of Crosshair
      FVector2D CrosshairLocation(CrosshairLocarion.X/2.f, crosshairLocation.Y/2.f);
-     CrosshairLocation.Y -= 50.f;
      FVector crosshairWorldLocation;
      FVector CrosshairWorldDirection;
 
@@ -473,11 +479,42 @@ void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
    0.5f + 
    CrosshairVelocityFactor+
    CrosshairIsInAirFactor-
-   CrosshairAimFactor;
+   CrosshairAimFactor+
+   CrosshairShootingFactor;
 }
 
+void AShooterCharacter::StartCrosshairBulletFire() 
+{
+   bFiringBullet = true;
+   GetWorldTimerManager().SetTimer(
+   CrosshairShootTimer, 
+   this, 
+   &AShooterCharacter::FinishCrosshairBulletFire(), 
+   ShootTimeDuration);
+}
 
+void AShooterCharacter::FinishCrosshairBulletFire() 
+{
+   bFiringBullet = false;
+}
 
+// true 0.05 seconds After Firing Bullet
+if(bFiringBullet)
+{
+  CrosshairShootingFactor = FMath::InterpTo(
+  CrosshairShootingFactor, 
+  0.3f,
+  DeltaTime, 
+  60.f);
+}
+else
+{
+  CrosshairShootingFactor = FMath::InterpTo(
+  CrosshairShootingFactor, 
+  0.f,
+  DeltaTime, 
+  60.f);
+}
 
 
 
