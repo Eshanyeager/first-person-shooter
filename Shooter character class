@@ -289,7 +289,7 @@ void AShooterCharacter::Tick( float DeltaTime )
     if(ItemTraceResult.bBlockingHit) 
     {
       AItem* HitItem = Cast<AItem>(ItemTraceResult.Actor);
-      if(Item)
+      if(HitItem && HitItem->GetPickupwidget())
       { 
         //Show Pickup Widget
         PickUpWidget->SetVisiblity(true);
