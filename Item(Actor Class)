@@ -37,6 +37,8 @@ private:
     class UWidgetComponent* PickupWidget;
    
 public:
+      
+      ForceInline UWidgetCompoment* GetPickupItem() const {return PickupItem};
 
 } 
 
