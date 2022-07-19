@@ -582,7 +582,7 @@ void AShooterCharacter::TraceUnderCrosshair(FHitResult& OutHitResult, FVecto& Ou
     
      if(bScreenToWorld)
      {
-       // Trace from crosshaie world location outward
+       // Trace from crosshair world location outward
        const FVector Start{ CrosshairWorldPosition };
        const FVector End { Start + CrosshairWorldDirection*50'000};
        OutHitLocation = End;
