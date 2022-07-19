@@ -285,7 +285,8 @@ void AShooterCharacter::Tick( float DeltaTime )
     
     //
     FHitResult ItemTraceReslut;
-    TraceUnderCrosshair(ItemTraceResult) ;
+    FVector HitLocation;
+    TraceUnderCrosshair(ItemTraceResult, HitLocation) ;
     if(ItemTraceResult.bBlockingHit) 
     {
       AItem* HitItem = Cast<AItem>(ItemTraceResult.Actor);
@@ -399,7 +400,8 @@ Void AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, 
      // Perform a second trace this time from gun barrel
      FHitResult WeaponTraceHit;
          const FVECTOR WeaponTraceStart{ MuzzleSocketLocation};
-         const FVector WeaponTraceEnd{ OutBeamLocation};
+         const FVector StartToEnd { OutBeamLocation - MuzzleSocketLocation };
+         const FVector WeaponTraceEnd{ MuzzleSocketLocation + StartToEnd * 1.25f};
          
          GetWorld()->LineTraceSingleByChannel(
          WeaponTraceHit, 
