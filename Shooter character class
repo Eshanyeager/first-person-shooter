@@ -136,7 +136,25 @@ Public:
     UFUNCTION() 
     void FinishCrosshaieBulletFire() ;
     
+    // true When We can Fire, false When Waiting for timer
+    bool bShouldFire;
     
+    // Left Mouse Button Pressed
+    bool bFireButtonPressed;
+    
+    // Rate for Automatic Gun Fire
+    float AutomaticFireRate;
+    
+    //Sets Time Between Gunshots
+    FTimerHandle AutoFireTimer
+    
+    void FireButtonPresses() ;
+    void FireButtonReleased() ;
+    
+    void StartFireTimer();
+    
+    UFUNCTION() 
+    void AutoFireReset();
 };
 
 
@@ -176,6 +194,10 @@ CrosshairShootingFactor(0.f);
 // Bullet Fire Timer Variables
 ShootTimeDuration(0.05f), 
 bFiringBullet(false) ;
+// Automatic  Gun Fire Rate
+AutomaticFireRate(0.1f), 
+bShouldFire(true), 
+bFireButtonPressed(false),
 
 {
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -268,7 +290,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     PlayerInputComponent->BindAxis("MoveRight", this, &AShooterCharacter::MoveRight);
     PlayerInputComponent->BindAction("Jump") , IE-Pressed, this, &ACharacter::Jump) ;
     PlayerInputComponent->BindAction("Jump") , IE_Released, this, &ACharacter::StopJumping) ;
-    PlayerInputComponent->BindAction("FireButton") , IE_Pressed, this, &AShooterCharacter::FireButton);
+    PlayerInputComponent->BindAction("FireButton") , IE_Pressed, this, &AShooterCharacter::FireButtonPressed);
+    PlayerInputComponent->BindAction("FireButton") , IE_Released, this, &AShooterCharacter::FireButtonReleased);
     PlayerInputComponent->BindAction("AimingButton") , IE-Pressed, this, &AShooterCharafter::AimingButtonPressed) ;
     PlayerInputComponent->BindAction("AimingButton") , IE_Released, this, &AShooterCharacter::AimingButtonReleased) ;
     
@@ -516,6 +539,38 @@ else
   60.f);
 }
 
+void AShooterCharacter::FireButtonPressed() 
+{
+  bFireButtonPressed = true;
+  StartFireTimer() ;
+}
+
+void AShooterCharacter::FireButtonReleased() 
+{
+  bFireButtonPressed = false;
+  
+}
+
+void AShooterCharacter::StartFireTimer() 
+{
+   if(bShouldFire) 
+   {
+     FireButton();
+     BShouldFire = false;
+     GetWorldTimerManager.SetTimer(
+     AutoFireTimer, 
+     this, 
+     &AShooterCharacter::AutoFireReset, 
+     AutomaticFireRate) ;
+}
+void AShooterCharacter::AutoFireReset() 
+{
+  bShouldFire = true;
+  if(bFireButtonPressed) 
+   { 
+     StartFireTimer() ;
+   }
+}
 
 
 
