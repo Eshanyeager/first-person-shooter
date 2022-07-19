@@ -155,6 +155,12 @@ Public:
     
     UFUNCTION() 
     void AutoFireReset();
+    
+    // Trace Item Under Crosshair
+    bool TraceUnderCrosshair(FHitResult& OutHitResult);
+    
+    
+    
 };
 
 
@@ -171,7 +177,7 @@ Public:
 #include "Sound/SoundCue.h"
 #include "Engine/SkeletalMeshSocket.h"
 #include "Particles/ParticleSystemComponent.h"
-
+#include "Item.h"
 
 
 // Sets default values
@@ -274,9 +280,21 @@ void AShooterCharacter::Tick( float DeltaTime )
     // Handlee Interpolation for zoom in
     CameraInterpZoom(DeltaTime) ;
     
-    
+    // Calculate Crosshair Spread Multiplier
     CalculateCrosshairSpread(DeltaTime) ;
-
+    
+    //
+    FHitResult ItemTraceReslut;
+    TraceUnderCrosshair(ItemTraceResult) ;
+    if(ItemTraceResult.bBlockingHit) 
+    {
+      AItem* HitItem = Cast<AItem>(ItemTraceResult.Actor);
+      if(Item)
+      { 
+        //Show Pickup Widget
+        PickUpWidget->SetVisiblity(true);
+      } 
+    }
 }
 
 // Called to bind functionality to input
@@ -570,6 +588,51 @@ void AShooterCharacter::AutoFireReset()
    { 
      StartFireTimer() ;
    }
+}
+
+void AShooterCharacter::TraceUnderCrosshair(FHitResult& OutHitResult) 
+{
+// Get view port size 
+  FVector2D ViewPortSize;
+  if(GEngine && GEngine->GameViewPort) 
+  {
+    GEngine->GameViewPort->GetViewPortSize(ViewPortSize);
+  }
+  
+  // Get Screen Space Location Of Crosshair
+     FVector2D CrosshairLocation(CrosshairLocarion.X/2.f, crosshairLocation.Y/2.f);
+     FVector crosshairWorldLocation;
+     FVector CrosshairWorldDirection;
+
+
+   // Get World Position and Direction of Crosshair
+     bool bScreenToWorld = UGamePlayStatics::DeProjectToWorld(
+     UGameplayStatics::GetPlayerController(this, 0), 
+     CrosshairLocation, 
+     CrosshairWorldPosition, 
+     CrosshairWorldDirection);
+    
+     if(bScreenToWorld)
+     {
+       // Trace from crosshaie world location outward
+       const FVector Start{ CrosshairWorldPosition };
+       const FVector End { Start + CrosshairWorldDirection*50'000};
+       
+       GetWorld()->LineTraceSingleByChannel(
+       OutHitResult, 
+       Start, 
+       End, 
+       ECollisionChannel::ECC_Visiblity);
+       
+     }
+       
+      if(OutHitResult.bBlockingHit) 
+      {
+        return true;
+      }
+  
+  
+ return false;
 }
 
 
