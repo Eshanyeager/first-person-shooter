@@ -61,7 +61,7 @@ AItem()::AItem()
   PrimaryActorTick.bCanEverTick = true;
   
    ItemMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ItemMesh"));
-   SetupRootComponent(ItemMesh);
+   SetRootComponent(ItemMesh);
    
    CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
    CollisionBox->SetupAttachment(ItemMesh);
