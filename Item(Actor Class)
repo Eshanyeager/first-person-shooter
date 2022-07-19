@@ -1,0 +1,84 @@
+             /***** Header File *****/
+
+# pragma once
+
+#include "CoreMinimal.h"
+#include "GameFrameWork/Actor.h
+#include " Item.Generated.h"
+
+UCLASS() 
+class SHOOTER_API AItem : AActor
+{
+ GENERATED_BODY() 
+
+public:
+   // Set's Default Value for this Actor's Properties
+   AItem();
+
+protected:
+   //Called when the game starts or when spawned
+   virtual void BeginPlay() override;
+
+public:
+   // Called every frame
+   virtual void Tick(float DeltaTime) override;
+
+private:
+    // Line Trace Collides with Box to show hud Widgets
+    UProperty(EditAnywhere, BluePrintReadOnly, Category "Item", mera = (AllowPrivateAccess))
+    class UBoxComponent* CollisionBox;
+    
+    //Skeletal Mesh for the Item
+    UProperty(EditAnywhere, BluePrintReadOnly, Category "Item", mera = (AllowPrivateAccess))
+    class USkeletalMeshComponent* ItemMesh;
+    
+public:
+
+} 
+
+
+
+
+         /******** Cpp File **********/
+
+
+
+#include "Item.h"
+
+
+//Sets Default value
+AItem()::AItem()
+{
+  // Set this actor to call tick() every frame, you can turn this off to improve performance
+  PrimaryActorTick.bCanEverTick = true;
+  
+   ItemMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("ItemMesh"));
+   SetupRootComponent(ItemMesh);
+   
+   CollisionBox = CreateDefaultSubobject<UBoxComponent>(TEXT("CollisionBox"));
+   CollisionBox->SetupAttachment(ItemMesh);
+  
+}
+
+
+//Called When the game starts or when spawned
+void AItem::BeginPlay()
+{
+  Super::BeginPlay();
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
