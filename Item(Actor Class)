@@ -73,6 +73,15 @@ AItem()::AItem()
 void AItem::BeginPlay()
 {
   Super::BeginPlay();
+  
+  // Hides widget when we are not looking at it
+  PickupWidget->SetVisiblity(false) ;
+}
+
+// Called every frame
+void AItem::Tick(float DeltaTime) 
+{
+
 }
 
 
