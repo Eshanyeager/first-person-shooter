@@ -171,6 +171,8 @@ Public:
     // Add/Subtracts To/From OverlappedItemCount and Update bShouldTraceForItems//
     void IncrememtOverlappedItemCount(int8 Amount) ;
     
+    // 
+    void TraceForItems();
 };
 
 
@@ -283,6 +285,25 @@ void AShooterCharacter::CameraInterpZoom(float DeltaTime)
    
 }
 
+void AShooterCharacer::TraceForItems() 
+{
+   if(bShouldTraceForItems) 
+   {
+    FHitResult ItemTraceReslut;
+    FVector HitLocation;
+    TraceUnderCrosshair(ItemTraceResult, HitLocation) ;
+    if(ItemTraceResult.bBlockingHit) 
+      {
+      AItem* HitItem = Cast<AItem>(ItemTraceResult.Actor);
+      if(HitItem && HitItem->GetPickupwidget())
+      { 
+        //Show Pickup Widget
+        HitItem->GetPickUpWidget()->SetVisiblity(true);
+      } 
+     }
+    }
+
+}
 
 // Called every frame
 void AShooterCharacter::Tick( float DeltaTime )
@@ -295,19 +316,8 @@ void AShooterCharacter::Tick( float DeltaTime )
     // Calculate Crosshair Spread Multiplier
     CalculateCrosshairSpread(DeltaTime) ;
     
-    //
-    FHitResult ItemTraceReslut;
-    FVector HitLocation;
-    TraceUnderCrosshair(ItemTraceResult, HitLocation) ;
-    if(ItemTraceResult.bBlockingHit) 
-    {
-      AItem* HitItem = Cast<AItem>(ItemTraceResult.Actor);
-      if(HitItem && HitItem->GetPickupwidget())
-      { 
-        //Show Pickup Widget
-        HitItem->GetPickUpWidget()->SetVisiblity(true);
-      } 
-    }
+    TraceForItems();
+    
 }
 
 // Called to bind functionality to input
