@@ -568,7 +568,7 @@ void AShooterCharacter::TraceUnderCrosshair(FHitResult& OutHitResult, FVecto& Ou
   
   // Get Screen Space Location Of Crosshair
      FVector2D CrosshairLocation(CrosshairLocarion.X/2.f, crosshairLocation.Y/2.f);
-     FVector crosshairWorldLocation;
+     FVector crosshairWorldPosition;
      FVector CrosshairWorldDirection;
 
 
