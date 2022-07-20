@@ -122,17 +122,18 @@ Public:
     float CrosshairShootingFactor;
     
     UFUNCTION() 
-    void GetCrosshairSpreadMultiplier();
+    float GetCrosshairSpreadMultiplier();
     
     void CalculateCrosshairSpread(float DeltaTime);
     
+    
+    // For Crosshair Spread when Shooting
     void ShootTimeDuration() ;
     bool bFiringBullet;
-    
     FTimerHandle CrosshairShootTimer;
     
-    void StarCrosshairBulletFire() ;
     
+    void StarCrosshairBulletFire() ;
     UFUNCTION() 
     void FinishCrosshaieBulletFire() ;
     
