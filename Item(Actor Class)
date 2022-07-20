@@ -59,7 +59,10 @@ private:
 public:
       
       ForceInline UWidgetCompoment* GetPickupItem() const {return PickupItem};
-
+     
+     // Name on Item Widget
+      UProperty(EditAnywhere, BluePrintReadOnly, Category = "Item",) 
+      FString ItemName;
 } 
 
 
@@ -77,7 +80,8 @@ public:
 
 
 //Sets Default value
-AItem()::AItem()
+AItem()::AItem():
+ItemName(FString("Default");
 {
   // Set this actor to call tick() every frame, you can turn this off to improve performance
   PrimaryActorTick.bCanEverTick = true;
