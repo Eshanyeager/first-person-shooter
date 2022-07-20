@@ -483,6 +483,26 @@ void AShooterCharacter::CalculateCrosshairSpread(float DeltaTime)
      DeltaTime, 
      30.f);
    }
+  
+  
+// true 0.05 seconds After Firing Bullet
+if(bFiringBullet)
+{
+  CrosshairShootingFactor = FMath::InterpTo(
+  CrosshairShootingFactor, 
+  0.3f,
+  DeltaTime, 
+  60.f);
+}
+else
+{
+  CrosshairShootingFactor = FMath::InterpTo(
+  CrosshairShootingFactor, 
+  0.f,
+  DeltaTime, 
+  60.f);
+}
+
      
    CrosshairSpreadMultiplier = 
    0.5f + 
@@ -507,23 +527,6 @@ void AShooterCharacter::FinishCrosshairBulletFire()
    bFiringBullet = false;
 }
 
-// true 0.05 seconds After Firing Bullet
-if(bFiringBullet)
-{
-  CrosshairShootingFactor = FMath::InterpTo(
-  CrosshairShootingFactor, 
-  0.3f,
-  DeltaTime, 
-  60.f);
-}
-else
-{
-  CrosshairShootingFactor = FMath::InterpTo(
-  CrosshairShootingFactor, 
-  0.f,
-  DeltaTime, 
-  60.f);
-}
 
 void AShooterCharacter::FireButtonPressed() 
 {
