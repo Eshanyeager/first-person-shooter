@@ -414,8 +414,7 @@ Void AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, 
           OutBeamLocation = WeaponTraceHit.Location; // Object Between Barrel and BeamEndPoint?
           return true;
          }     
-   return false;    
-  }         
+   return false;             
 }
                  
 void AShooterCharacter::AimingbuttonPressed() 
