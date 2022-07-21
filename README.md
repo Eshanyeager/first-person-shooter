@@ -1,2 +1,2 @@
-# first-person-shooter
+# Third Person Shooter
 Shooter game, unreal engine, cpp
