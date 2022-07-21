@@ -274,6 +274,21 @@ void AItem::SetItemProperties(EItemState State)
        CollisionBox->SetCollisionEnabled(
        ECollisionEnabledNoCollision);
        break;
+       
+       // Weapon falling state 
+       case EItemState::EIS_Falling:
+       
+       ItemMesh->SetSimulatePhysics(true);
+       ItemMesh->SetEnableGravity(true) ;
+       ItemMesh->SetVisibilty(true) ;
+       ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysicsOnly) ;
+       ItemMesh->SetCollisionResponseToAllChannels(
+       EChollisionEnable::ECR_Ignore) ;
+       ItemMesh->SetCollisionResponseToChannel(
+       ECollisionChannel::ECC_WorldStatic, 
+       ECollisionResponse::ECR_Block) ;
+       
+       break;
      }
 }
 
