@@ -111,6 +111,7 @@ public:
       ForceInline UBoxComponent* GetCollisionBox() const {return CollisionBox:}
       ForrceInline EItemState GetItemState() const {return ItemState;}
       void SetItemState(EItemState State);
+      ForceInline USkeletalMeshComponent* GetItemMesh() const {return ItemMesh;}
 } 
 
 
