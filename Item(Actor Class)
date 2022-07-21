@@ -6,7 +6,7 @@
 #include "GameFrameWork/Actor.h
 #include " Item.Generated.h"
 
-UENUM(BluePrintType) 
+UENUM(BlueprintType) 
 class enum EItemRarity : Uint8
 {
   EIR_Common UMETA(DisplayName = "Common"), 
@@ -17,6 +17,19 @@ class enum EItemRarity : Uint8
   
   EIR_Max UMETA(DisplayName = " DefaultMsx")
 };
+// Enum for item state
+UENUM(BlueprintType) 
+class enum EItemState : Uint8
+{
+ EIS_Pickup UMETA(DisplayName = "Pickup"), 
+ EIS_EquipInterp UMETA(DisplayName =" EquipInterp"), 
+ EIS_PickedUp UMETA(DisplayName =" PickedUp"), 
+ EIS_Equip UMETA(DisplayName =" Equip"), 
+ EIS_Falling UMETA(DisplayName =" Falling"), 
+ 
+ EIS_Max UMETA(DisplayName =" DefaultMax")
+};
+
 
 UCLASS() 
 class SHOOTER_API AItem : AActor
@@ -56,29 +69,23 @@ public:
 
 private:
     // Line Trace Collides with Box to show hud Widgets
-    UProperty(EditAnywhere, BluePrintReadOnly, Category "Item", mera = (AllowPrivateAccess))
+    UProperty(EditAnywhere, BluePrintReadOnly, Category "Item", mera = (AllowPrivateAccess = "true"))
     class UBoxComponent* CollisionBox;
     
     //Skeletal Mesh for the Item
-    UProperty(EditAnywhere, BluePrintReadOnly, Category "Item", mera = (AllowPrivateAccess))
+    UProperty(EditAnywhere, BluePrintReadOnly, Category "Item", mera = (AllowPrivateAccess = "true"))
     class USkeletalMeshComponent* ItemMesh;
     
     // Popup Widget when the player looks at item
-    UProperty(EditAnywhere, BluePrintReadOnly, Category "Item", mera = (AllowPrivateAccess))
+    UProperty(EditAnywhere, BluePrintReadOnly, Category "Item", mera = (AllowPrivateAccess = "true"))
     class UWidgetComponent* PickupWidget;
     
     // Show Widget When Overlapped on item
-    UProperty(EditAnywhere, BluePrintReadOnly, Category "Item", mera = (AllowPrivateAccess))
+    UProperty(EditAnywhere, BluePrintReadOnly, Category "Item", meta = (AllowPrivateAccess = "true"))
     class UShpereComponent* AreaSphere;
-   
-public:
-      
-      ForceInline UWidgetCompoment* GetPickupItem() const {return PickupItem;}
-      ForceInline USphereComponent* GetAreaShpere() const {return AreaShpere;}
-      ForceInline UBoxComponent* GetCollisionBox() const {return CollisionBox:}
-     
-     // Name on Item Widget
-      UProperty(EditAnywhere, BluePrintReadOnly, Category = "Item",) 
+    
+    // Name on Item Widget
+      UProperty(EditAnywhere, BluePrintReadOnly, Category = "Item", meta = (AllowPrivateAccess = "true")) 
       FString ItemName;
       
       // Shows no count on widget
@@ -86,10 +93,21 @@ public:
      
       TArray<bool> ActiveStars;
       
-      
       // Item Rarity- Determines The no stars on pickup widget
-      UProperty(EidtAnywhere, BlueprintReadOnly, Category = " Item") 
-      EItemRarity ItemRarity
+      UProperty(EidtAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true")) 
+      EItemRarity ItemRarity;
+       
+       // State of the Item
+      UProperty(EidtAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true")) 
+      EItemState ItemState;
+   
+public:
+      
+      ForceInline UWidgetCompoment* GetPickupItem() const {return PickupItem;}
+      ForceInline USphereComponent* GetAreaShpere() const {return AreaShpere;}
+      ForceInline UBoxComponent* GetCollisionBox() const {return CollisionBox:}
+      ForrceInline EItemState GetItemState() const {return ItemState;}
+      ForceInline void SetItemState(EItemState State) {ItemState = State;}
 } 
 
 
@@ -110,7 +128,8 @@ public:
 AItem()::AItem():
 ItemName(FString("Default"), 
 ItemCount(0), 
-ItemRarity(EItemRarity::EIR_Common)
+ItemRarity(EItemRarity::EIR_Common), 
+ItemState(EItemState::Pickup)
 {
   // Set this actor to call tick() every frame, you can turn this off to improve performance
   PrimaryActorTick.bCanEverTick = true;
