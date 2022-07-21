@@ -137,12 +137,16 @@ void AItem::BeginPlay()
 {
   Super::BeginPlay();
   
-  // Hides widget when we are not looking at it
-  PickupWidget->SetVisiblity(false) ;
+  // Hide Pickup Widget
+  if(PickupWidget)
+  { 
+    PickupWidget->SetVisiblity(false) ;
+  }
   
   AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnShpereOverlap);
   AreaSphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnShpereEndOverlap);
   
+  // Sets Active stars array based on rarity
   SetActiveStars();
 }
 
