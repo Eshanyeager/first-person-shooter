@@ -32,6 +32,9 @@ protected:
     // Buttons for dropping weapon
     void SelectButtonPress() ;
     void SelectButtonRelease() ;
+    
+    // Drops currently equipped weapon and equips trace hit item
+    void SwapWeapon(AWeapon* WeaponToSwap) ;
 
 public:
     // Called every frame
@@ -66,7 +69,7 @@ private:
     class UParticleSystem* ImpactParticles;
     
     // spawning beam trails
-    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)
+    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
     class UParticleSystem* BeamParticles;
     
     // True if we should trace every frame for item
@@ -76,11 +79,15 @@ private:
     int8 OverlappedItemCount;
     
     // Currently Equippes Weapon
-    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)
+    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
     class AWeapon* EquippedWeapon;
     
     // Set this in blueprint for default weapon class
     TSubClassOf<AWeapon> DefaultWeaponClass;
+    
+    // Item currently hit by our trace in traceforitem
+    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
+    AItem* TraceHitItem;
     
 Public:
     //returns CameraBoom subobject
@@ -322,21 +329,21 @@ void AShooterCharacer::TraceForItems()
      TraceUnderCrosshair(ItemTraceResult, HitLocation) ;
      if(ItemTraceResult.bBlockingHit) 
        {
-         AItem* HitItem = Cast<AItem>(ItemTraceResult.Actor);
-         if(HitItem && HitItem->GetPickupwidget())
+         TraceHitItem = Cast<AItem>(ItemTraceResult.Actor);
+         if(TraceHitItem && TraceHitItem->GetPickupwidget())
           { 
             //Show Pickup Widget
-            HitItem->GetPickUpWidget()->SetVisiblity(true);
+            TraceHitItem->GetPickUpWidget()->SetVisiblity(true);
           } 
        }
        
-       if(HitItem != TraceForItemLastFrame) 
+       if(TraceHitItem != TraceForItemLastFrame) 
         {
            
            TraceHitItemLastFrame->GetPickupWidget()->SetVisiblity(false) ;
         }
        // Store a Reference to the HitItem
-       TraceHituItemLastFrame = HitItem;
+       TraceHituItemLastFrame = TraceHitItem;
    }
    else if(TraceHitItemLastFrame)
    {
@@ -491,12 +498,22 @@ void AShooterCharacter::FireButton()
 
 void AShooterCharacter::SelectButtonPressed() 
 {
-  DropWeapon() ;
-  
+     if(TraceHitWeapon) 
+     {
+        auto TraceHitWeapon = Cast<AWeapon>(TraceHitItem);
+        SwapWeapon(TraceHitWeapon);
+     }
 }
 void AShooterCharacter::SelectButtonPressed() 
 {
   
+}
+void AShooterCharacter::SwapWeapon(AWeapon* WeaponToSwap) 
+{
+     DropWeapon() ;
+     EquipWeapon(WeaponToSwap) ;
+     TraceHitItem = nullptr;
+     TraceHitItemLastFrame =nullptr;
 }
 
 
