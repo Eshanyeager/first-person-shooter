@@ -19,6 +19,8 @@ public:
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
+    
+    void SpawnDefaultWeapon();
 
 public:
     // Called every frame
@@ -61,6 +63,13 @@ private:
     
     // No of Overlapped AItems
     int8 OverlappedItemCount;
+    
+    // Currently Equippes Weapon
+    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)
+    class AWeapon* EquippedWeapon;
+    
+    // Set this in blueprint for default weapon class
+    TSubClassOf<AWeapon> DefaultWeaponClass;
     
 Public:
     //returns CameraBoom subobject
@@ -261,6 +270,9 @@ void AShooterCharacter::BeginPlay()
     {
       CameraDefaultFov = GetFollowCamera()->FieldOfView;
       CameraCurrentFov = CameraDefaultFov;
+      
+      // Spawn the weapon and attach mesh
+      SpawnDefaultWeapon();
     }
     
 }
@@ -319,6 +331,25 @@ void AShooterCharacer::TraceForItems()
      TraceHitItemLastFrame->GetPickupWidget()->SetVisiblity(false);
    }
 
+}
+
+void AShooterCharacter::SpawnDefaultWeapon() 
+{
+     // Check for TSubClassOf Variable
+     if(DefaultWeaponClass) 
+     {
+         // Spawn Weapon
+         AWeapon* DefaultWeapon = SpawnActor<AWeapon>(DefaultWeaponClass);
+         
+         // Get The Hand socket
+         const USkeletalMeshSocket* HandSocket = GetMesh()->GetSocketByName(
+         FName("RighHandSocket));
+         if(HandSocket) 
+         {
+             // Attach weapon to the hand
+             HandSocket->AttachActor(DefaultWeapon, GetMesh()) ;
+         }
+     }
 }
 
 // Called every frame
