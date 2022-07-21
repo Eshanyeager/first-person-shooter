@@ -100,6 +100,9 @@ private:
        // State of the Item
       UProperty(EidtAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true")) 
       EItemState ItemState;
+      // Set Item Properties based on state
+      UProperty(EidtAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true"))
+      void SetItemProperties(EItemState);
    
 public:
       
@@ -107,7 +110,7 @@ public:
       ForceInline USphereComponent* GetAreaShpere() const {return AreaShpere;}
       ForceInline UBoxComponent* GetCollisionBox() const {return CollisionBox:}
       ForrceInline EItemState GetItemState() const {return ItemState;}
-      ForceInline void SetItemState(EItemState State) {ItemState = State;}
+      void SetItemState(EItemState State);
 } 
 
 
@@ -169,6 +172,10 @@ void AItem::BeginPlay()
   
   // Sets Active stars array based on rarity
   SetActiveStars();
+  
+  // Set item properties based on state
+  SetItemProperties(ItemState) ;
+  
 }
 
 void AItem::SetActiveStars()
@@ -212,6 +219,61 @@ void AItem::SetActiveStars()
     break;
   }
   
+}
+
+void AItem::SetItemProperties(EItemState State) 
+{
+     switch(State) 
+     {
+       case EItemState::EIS_Pickup:
+       
+       //Set Item properties
+       ItemMesh->SetSimulatePhysics(false) ;
+       ItemMesh->SetVisibility(true) ;
+       ItemMesh->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore);
+       ItemMesh->SetCollisionEnabled(
+       EcollisionEnabled::NoCollision);
+       
+       // Set Areashpere properties
+       AreaShpere->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Overlap);
+       AreaShpere->SetCollisionEnabled(
+       ECollisionEnabled::QueryOnly);
+       
+       // Set CollisionBox properties
+       CollisionBox->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore);
+       CollisionBox->SetCollisionResponseToChannel(
+       ECollisionChannel::ECC_Visibility,
+       ECollisionResponse::ECR_Block);
+       CollisionBox->SetCollisionEnabled(
+       ECollisionEnabled::QueryAndPhysics);
+       break;   
+       
+       case EItemState::Equipped:
+       
+       //Set Item properties
+       ItemMesh->SetSimulatePhysics(false) ;
+       ItemMesh->SetVisibility(true) ;
+       ItemMesh->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore);
+       ItemMesh->SetCollisionEnabled(
+       EcollisionEnabled::NoCollision);
+       
+       // Set Areashpere properties
+       AreaShpere->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore);
+       AreaShpere->SetCollisionEnabled(
+       ECollisionEnabled::NoCollision);
+       
+       // Set CollisionBox properties
+       CollisionBox->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore);
+       CollisionBox->SetCollisionEnabled(
+       ECollisionEnabledNoCollision);
+       break;
+     }
 }
 
 void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
