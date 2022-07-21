@@ -354,13 +354,7 @@ void AShooterCharacer::EquipWeapon(AWeapon* WeaponToEquip)
 {
      if(WeaponToEquip) 
         {
-         // Set Area Shpere to ignore all collision channel
-         WeaponToEquip->GetAreaShpere()-SetCollisionResponseToAllChannels(
-         ECollisionResponse::ECR_Ignore);
-         // Set CollisionBox to ignore all collision channel
-         WeaponToEquip->GetCollisionBox()-SetCollisionResponseToAllChannels(
-         ECollisionResponse::ECR_Ignore);
-         
+     
          // Get The Hand socket
          const USkeletalMeshSocket* HandSocket = GetMesh()->GetSocketByName(
          FName("RighHandSocket));
@@ -370,7 +364,7 @@ void AShooterCharacer::EquipWeapon(AWeapon* WeaponToEquip)
              HandSocket->AttachActor(WeaponEquip, GetMesh()) ;
              }
          EquippedWeapon = WeaponToEquip;
-         EquippesWeapon->SetItemState(EItemState::EIS_Equipped) ;
+         EquippedWeapon->SetItemState(EItemState::EIS_Equipped) ;
         }   
         
 }
