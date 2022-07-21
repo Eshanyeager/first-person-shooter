@@ -48,7 +48,7 @@ AWeappon()::AWeapon():
 ThrowWeaponTime(0.7f),
 bFalling(false)
 {
-  
+   PrimaryActorTick. bCanEverTick = true;
 }
 void AWeapon::Tick(flaot DeltaTime)
 {
@@ -75,7 +75,7 @@ void AWeapon::ThrowWeaponTime()
    
    float RandomRotation{30.f};
    ImpulseDirection = ImpusleDirection.RotateAngleAxis(RandomRotation, FVector{0.f, 0.f, 1.f}) ;
-   ImpulseDirection *= 200'000.f;
+   ImpulseDirection *= 20'000.f;
    GetItemMesh()->AddImpulse(ImpulseDirection);
    
    bFalling = true;
