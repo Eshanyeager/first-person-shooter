@@ -25,6 +25,9 @@ protected:
     
     // Takes a weapon and attached to the mesh
     void equipweapon( class AWeapon* WeaponToEquip) ;
+    
+    // Detach weapon and let it fall on ground
+    void DropWeapon() ;
 
 public:
     // Called every frame
@@ -367,6 +370,11 @@ void AShooterCharacer::EquipWeapon(AWeapon* WeaponToEquip)
          EquippedWeapon->SetItemState(EItemState::EIS_Equipped) ;
         }   
         
+}
+
+void AShooterCharacter::DropWeapon() 
+{
+    
 }
 
 // Called every frame
