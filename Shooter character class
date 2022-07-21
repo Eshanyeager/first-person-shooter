@@ -490,6 +490,7 @@ void AShooterCharacter::FireButton()
 void AShooterCharacter::SelectButtonPressed() 
 {
   DropWeapon() ;
+  EquippedWeapon->GetMesh()
 }
 void AShooterCharacter::SelectButtonPressed() 
 {
