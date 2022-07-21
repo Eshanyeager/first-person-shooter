@@ -24,7 +24,7 @@ class enum EItemState : Uint8
  EIS_Pickup UMETA(DisplayName = "Pickup"), 
  EIS_EquipInterp UMETA(DisplayName =" EquipInterp"), 
  EIS_PickedUp UMETA(DisplayName =" PickedUp"), 
- EIS_Equip UMETA(DisplayName =" Equip"), 
+ EIS_Equipped UMETA(DisplayName =" Equipped"), 
  EIS_Falling UMETA(DisplayName =" Falling"), 
  
  EIS_Max UMETA(DisplayName =" DefaultMax")
