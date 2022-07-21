@@ -20,7 +20,11 @@ protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
     
+    // Spawn default weapon and equips it
     void SpawnDefaultWeapon();
+    
+    // Takes a weapon and attached to the mesh
+    void equipweapon( class AWeapon* WeaponToEquip) ;
 
 public:
     // Called every frame
@@ -352,6 +356,23 @@ void AShooterCharacter::SpawnDefaultWeapon()
      }
      // Set equipped weapon to newly spawned weapon 
      EquippedWeapon = DefaultWeapon;
+}
+
+void AShooterCharacer::EquipWeapon(AWeapon* WeaponToEquip) 
+{
+     if(WeaponToEquip) 
+         {
+         
+         // Get The Hand socket
+         const USkeletalMeshSocket* HandSocket = GetMesh()->GetSocketByName(
+         FName("RighHandSocket));
+         if(HandSocket) 
+             {
+             // Attach weapon to the hand
+             HandSocket->AttachActor(WeaponEquip, GetMesh()) ;
+             }
+         }
+     EquippedWeapon = WeaponToEquip;
 }
 
 // Called every frame
