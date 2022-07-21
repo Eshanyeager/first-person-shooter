@@ -254,7 +254,8 @@ void AItem::SetItemProperties(EItemState State)
        break;   
        
        case EItemState::Equipped:
-       
+      
+       PickupWidget->SetVisibiilty(false); 
        //Set Item properties
        ItemMesh->SetSimulatePhysics(false) ;
        ItemMesh->SetEnableGravity(false);
