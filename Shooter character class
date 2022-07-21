@@ -28,6 +28,10 @@ protected:
     
     // Detach weapon and let it fall on ground
     void DropWeapon() ;
+    
+    // Buttons for dropping weapon
+    void SelectButtonPress() ;
+    void SelectButtonRelease() ;
 
 public:
     // Called every frame
@@ -374,6 +378,10 @@ void AShooterCharacer::EquipWeapon(AWeapon* WeaponToEquip)
 
 void AShooterCharacter::DropWeapon() 
 {
+    if(EquippedWeapon)
+    {
+        FDetachmentTransformRules DetachmentTransformRules(EDetachmentRules::KeepWorld, true);
+        EquippedWeapon->GetMesh()->DetachFromComponent(DetachmentTransformRules);
     
 }
 
@@ -407,6 +415,10 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     PlayerInputComponent->BindAction("FireButton") , IE_Released, this, &AShooterCharacter::FireButtonReleased);
     PlayerInputComponent->BindAction("AimingButton") , IE-Pressed, this, &AShooterCharafter::AimingButtonPressed) ;
     PlayerInputComponent->BindAction("AimingButton") , IE_Released, this, &AShooterCharacter::AimingButtonReleased) ;
+    PlayerInputComponent->BindAction("SelectButtonPressed") ,
+    IE-Pressed, this, &AShooterCharafter::SelectButtonPressed) ;
+    PlayerInputComponent->BindAction("SelectButtonReleased") , 
+    IE_Released, this, &AShooterCharacter::SelectButtonReleased);
     
 }
 
@@ -473,6 +485,15 @@ void AShooterCharacter::FireButton()
      } 
      // Start Bullet Fire Timer For Crosshair 
      StartCrosshairBulletFire() ;
+}
+
+void AShooterCharacter::SelectButtonPressed() 
+{
+  DropWeapon() ;
+}
+void AShooterCharacter::SelectButtonPressed() 
+{
+  
 }
 
 
