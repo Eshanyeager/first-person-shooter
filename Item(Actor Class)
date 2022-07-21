@@ -6,6 +6,18 @@
 #include "GameFrameWork/Actor.h
 #include " Item.Generated.h"
 
+UENUM(BluePrintType) 
+class enum EItemRarity : Uint8
+{
+  EIR_Common UMETA(DisplayName = "Common"), 
+  EIR_UnCommon UMETA(DisplayName = "UnCommon"), 
+  EIR_Rare UMETA(DisplayName = "Rare"), 
+  EIR_Epic UMETA(DisplayName = "Epic"), 
+  EIR_Legendary UMETA(DisplayName = "Legendary"), 
+  
+  EIR_Max UMETA(DisplayName = " DefaultMsx")
+};
+
 UCLASS() 
 class SHOOTER_API AItem : AActor
 {
@@ -34,6 +46,9 @@ protected:
    AActor* OtherActor, 
    UPrimitiveComponent* OtherComp, 
    int32 OtherBodyIndex);
+   
+   // Set The Active Stars Array of bools based on rarity
+   void SetActiveStars();
 
 public:
    // Called every frame
@@ -63,6 +78,16 @@ public:
      // Name on Item Widget
       UProperty(EditAnywhere, BluePrintReadOnly, Category = "Item",) 
       FString ItemName;
+      
+      // Shows no count on widget
+      int32 ItemCount;
+     
+      TArray<bool> ActiveStars;
+      
+      
+      // Item Rarity- Determines The no stars on pickup widget
+      UProperty(EidtAnywhere, BlueprintReadOnly, Category = " Item") 
+      EItemRarity ItemRarity
 } 
 
 
@@ -81,7 +106,9 @@ public:
 
 //Sets Default value
 AItem()::AItem():
-ItemName(FString("Default");
+ItemName(FString("Default"), 
+ItemCount(0), 
+ItemRarity(EItemRarity::EIR_Common)
 {
   // Set this actor to call tick() every frame, you can turn this off to improve performance
   PrimaryActorTick.bCanEverTick = true;
@@ -99,7 +126,7 @@ ItemName(FString("Default");
    PickupWidget = CreateDefaultSubobject<UWidgetComponent>(TEXT("PickupWidget"));
    PickupWidget->SetupAttachment(GetRootComponent());
    
-   AreaSphere = CIreateDefaultSubobject<USphereComponent>(TEXT("AreaSphere"));
+   AreaSphere = CreateDefaultSubobject<USphereComponent>(TEXT("AreaSphere"));
    AreaSphere->SetupAttachment(GetRootComponent());
    
 }
@@ -115,6 +142,51 @@ void AItem::BeginPlay()
   
   AreaSphere->OnComponentBeginOverlap.AddDynamic(this, &AItem::OnShpereOverlap);
   AreaSphere->OnComponentEndOverlap.AddDynamic(this, &AItem::OnShpereEndOverlap);
+  
+  SetActiveStars();
+}
+
+void AItem::SetActiveStars()
+{
+  // 0 Element isn't used
+  for(int32 i=0; i<=0; i++) 
+  {
+    ActiveStars.Add(false);
+  }
+  Switch(ItemRarity) 
+  {
+    case EItemRarity : EIR_Common;
+    ActiveStars[1];
+    break;
+    
+    case EItemRarityEItemRarity::EIR_UnCommon;
+    ActiveStars[1] = true;
+    ActiveStarts[2] = true;
+    break;
+    
+    case EItemRarity::EIR_Rare;
+    ActiveStars[1] = true;
+    ActiveStars[2] = true;
+    ActiveStars[3] = true;
+    break;
+    
+    case EItemRarity::EIR_Epic;
+    ActiveStars[1] = true;
+    ActiveStars[2] = true;
+    ActiveStars[3] = true;
+    ActiveStars[4] = true;
+    break;
+    
+    
+    case EItemRarity::EIR_Legendary;
+    ActiveStars[1] = true;
+    ActiveStars[2] = true;
+    ActiveStars[3] = true;
+    ActiveStars[4] = true;
+    ActiveStars[5] = true;
+    break;
+  }
+  
 }
 
 void AItem::OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
