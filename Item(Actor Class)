@@ -230,6 +230,7 @@ void AItem::SetItemProperties(EItemState State)
        
        //Set Item properties
        ItemMesh->SetSimulatePhysics(false) ;
+       ItemMesh->SetEnableGravity(false);
        ItemMesh->SetVisibility(true) ;
        ItemMesh->SetCollisionResponseToAllChannels(
        ECollisionResponse::ECR_Ignore);
@@ -256,6 +257,7 @@ void AItem::SetItemProperties(EItemState State)
        
        //Set Item properties
        ItemMesh->SetSimulatePhysics(false) ;
+       ItemMesh->SetEnableGravity(false);
        ItemMesh->SetVisibility(true) ;
        ItemMesh->SetCollisionResponseToAllChannels(
        ECollisionResponse::ECR_Ignore);
@@ -280,13 +282,25 @@ void AItem::SetItemProperties(EItemState State)
        
        ItemMesh->SetSimulatePhysics(true);
        ItemMesh->SetEnableGravity(true) ;
-       ItemMesh->SetVisibilty(true) ;
        ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysicsOnly) ;
        ItemMesh->SetCollisionResponseToAllChannels(
        EChollisionEnable::ECR_Ignore) ;
        ItemMesh->SetCollisionResponseToChannel(
        ECollisionChannel::ECC_WorldStatic, 
        ECollisionResponse::ECR_Block) ;
+       
+       // Set Areashpere properties
+       AreaShpere->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore);
+       AreaShpere->SetCollisionEnabled(
+       ECollisionEnabled::NoCollision);
+       
+       // Set CollisionBox properties
+       CollisionBox->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore);
+       CollisionBox->SetCollisionEnabled(
+       ECollisionEnabledNoCollision);
+       break;
        
        break;
      }
