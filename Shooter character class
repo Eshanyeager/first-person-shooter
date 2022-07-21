@@ -370,7 +370,9 @@ void AShooterCharacer::EquipWeapon(AWeapon* WeaponToEquip)
              HandSocket->AttachActor(WeaponEquip, GetMesh()) ;
              }
          EquippedWeapon = WeaponToEquip;
-        }    
+         EquippesWeapon->SetItemState(EItemState::EIS_Equipped) ;
+        }   
+        
 }
 
 // Called every frame
