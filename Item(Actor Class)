@@ -73,7 +73,9 @@ private:
    
 public:
       
-      ForceInline UWidgetCompoment* GetPickupItem() const {return PickupItem};
+      ForceInline UWidgetCompoment* GetPickupItem() const {return PickupItem;}
+      ForceInline USphereComponent* GetAreaShpere() const {return AreaShpere;}
+      ForceInline UBoxComponent* GetCollisionBox() const {return CollisionBox:}
      
      // Name on Item Widget
       UProperty(EditAnywhere, BluePrintReadOnly, Category = "Item",) 
