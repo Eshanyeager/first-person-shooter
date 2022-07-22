@@ -182,7 +182,7 @@ void AItem::BeginPlay()
 void AItem::SetActiveStars()
 {
   // 0 Element isn't used
-  for(int32 i=0; i<=0; i++) 
+  for(int32 i=0; i<=5; i++) 
   {
     ActiveStars.Add(false);
   }
