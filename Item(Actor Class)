@@ -186,9 +186,9 @@ void AItem::SetActiveStars()
   {
     ActiveStars.Add(false);
   }
-  Switch(ItemRarity): 
+  Switch(ItemRarity)
   {
-    case EItemRarity : EIR_Common;
+    case EItemRarity : EIR_Common:
     ActiveStars[1] = true;
     break;
     
@@ -224,9 +224,9 @@ void AItem::SetActiveStars()
 
 void AItem::SetItemProperties(EItemState State) 
 {
-     switch(State): 
+     switch(State)
      {
-       case EItemState::EIS_Pickup;
+       case EItemState::EIS_Pickup:
        
        //Set Item properties
        ItemMesh->SetSimulatePhysics(false) ;
