@@ -285,7 +285,7 @@ void AItem::SetItemProperties(EItemState State)
        ItemMesh->SetEnableGravity(true) ;
        ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysicsOnly) ;
        ItemMesh->SetCollisionResponseToAllChannels(
-       EChollisionEnable::ECR_Ignore) ;
+       ECollisionResponse::ECR_Ignore) ;
        ItemMesh->SetCollisionResponseToChannel(
        ECollisionChannel::ECC_WorldStatic, 
        ECollisionResponse::ECR_Block) ;
