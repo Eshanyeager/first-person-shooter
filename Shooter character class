@@ -337,7 +337,7 @@ void AShooterCharacer::TraceForItems()
           } 
        }
        
-       if(TraceHitItem != TraceForItemLastFrame) 
+       if(TraceHitItem != TraceHitItemLastFrame) 
         {
            
            TraceHitItemLastFrame->GetPickupWidget()->SetVisiblity(false) ;
