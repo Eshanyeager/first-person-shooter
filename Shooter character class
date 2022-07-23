@@ -343,7 +343,7 @@ void AShooterCharacer::TraceForItems()
            TraceHitItemLastFrame->GetPickupWidget()->SetVisiblity(false) ;
         }
        // Store a Reference to the HitItem
-       TraceHituItemLastFrame = TraceHitItem;
+       TraceHitItemLastFrame = TraceHitItem;
    }
    else if(TraceHitItemLastFrame)
    {
