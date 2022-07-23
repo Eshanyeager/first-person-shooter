@@ -375,7 +375,7 @@ void AShooterCharacer::EquipWeapon(AWeapon* WeaponToEquip)
          if(HandSocket) 
              {
              // Attach weapon to the hand
-             HandSocket->AttachActor(WeaponEquip, GetMesh()) ;
+             HandSocket->AttachActor(WeaponToEquip, GetMesh()) ;
              }
          EquippedWeapon = WeaponToEquip;
          EquippedWeapon->SetItemState(EItemState::EIS_Equipped) ;
@@ -679,7 +679,7 @@ void AShooterCharacter::StartFireTimer()
    if(bShouldFire) 
    {
      FireButton();
-     BShouldFire = false;
+     bShouldFire = false;
      GetWorldTimerManager.SetTimer(
      AutoFireTimer, 
      this, 
