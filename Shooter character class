@@ -213,6 +213,8 @@ Public:
     float TraceHitItemLastFrame;
     
     FVector GetCameraInterpLocation();
+    
+    void GetPickupItem(AShooterCharacter* Chat) ;
 };
 
 
@@ -777,6 +779,10 @@ void AShooterCharacter::GetCameraInterpLocation()
     FVector(0.f, 0.f, CameraInterpElevation) ;
 }
 
+void AShooterCharacter::GetPickupItem() 
+{
+
+}
 
 
 
