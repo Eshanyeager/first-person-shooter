@@ -214,7 +214,7 @@ Public:
     
     FVector GetCameraInterpLocation();
     
-    void GetPickupItem(AShooterCharacter* Chat) ;
+    void GetPickupItem(AItem* Item) ;
 };
 
 
@@ -779,7 +779,7 @@ void AShooterCharacter::GetCameraInterpLocation()
     FVector(0.f, 0.f, CameraInterpElevation) ;
 }
 
-void AShooterCharacter::GetPickupItem() 
+void AShooterCharacter::GetPickupItem(AItem* Item) 
 {
 
 }
