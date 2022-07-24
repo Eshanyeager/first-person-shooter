@@ -101,8 +101,14 @@ private:
       UProperty(EidtAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true")) 
       EItemState ItemState;
       // Set Item Properties based on state
-      UProperty(EidtAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true"))
+      UProperty(EditAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true"))
       void SetItemProperties(EItemState State);
+      
+      // The Curve Asset to use when interping
+      UProperty(EditAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true"))
+      class UCurveFloat* ItemZCurve;
+      
+      
    
 public:
       
