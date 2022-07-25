@@ -779,8 +779,13 @@ void AShooterCharacter::GetCameraInterpLocation()
 }
 
 void AShooterCharacter::GetPickupItem(AItem* Item) 
-{
-
+{ 
+    auto Weapon = Cast<AWeapon>(Item);
+    if(Weapon) 
+    { 
+       SwapWeapon(Weapon);
+    }
+    
 }
 
 
