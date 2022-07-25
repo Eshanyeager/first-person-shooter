@@ -515,7 +515,7 @@ void AShooterCharacter::SelectButtonPressed()
 {
      if(TraceHitItem) 
      {
-        TracHitWeapon->StartItemCurve(this) ;
+        TracHitItem->StartItemCurve(this) ;
      }
 }
 void AShooterCharacter::SelectButtonPressed() 
