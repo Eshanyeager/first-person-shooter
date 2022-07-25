@@ -310,7 +310,7 @@ void AItem::SetItemProperties(EItemState State)
        CollisionBox->SetCollisionResponseToAllChannels(
        ECollisionResponse::ECR_Ignore);
        CollisionBox->SetCollisionEnabled(
-       ECollisionEnabledNoCollision);
+       ECollisionEnabled::NoCollision);
        break;
        
        // Weapon falling state 
@@ -343,6 +343,7 @@ void AItem::SetItemProperties(EItemState State)
        // Set item mesh priperties
        ItemMesh->SetSimulatePhysics(false);
        ItemMesh->SetEnableGravity(false) ;
+       ItemMesh->SetVisibility(true) ;
        ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysicsOnly) ;
        ItemMesh->SetCollisionResponseToAllChannels(
        ECollisionResponse::ECR_Ignore) ;
@@ -350,6 +351,18 @@ void AItem::SetItemProperties(EItemState State)
        ECollisionChannel::ECC_WorldStatic, 
        ECollisionResponse::ECR_Block) ;
        
+       // Set Areashpere properties
+       AreaShpere->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore);
+       AreaShpere->SetCollisionEnabled(
+       ECollisionEnabled::NoCollision);
+       
+       // Set CollisionBox properties
+       CollisionBox->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore);
+       CollisionBox->SetCollisionEnabled(
+       ECollisionEnabled::NoCollision);
+       break;
      }
 }
 
