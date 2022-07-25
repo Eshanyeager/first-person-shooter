@@ -136,6 +136,10 @@ private:
       UProperty(VisibleAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true"))
       class AShooterCharacter* Character;
       
+      // X and Y for item while interping in the equipInterping state
+      float ItemInterpX;
+      float ItemInterpY;
+      
    
 public:
       
@@ -170,7 +174,12 @@ ItemRarity(EItemRarity::EIR_Common),
 ItemState(EItemState::Pickup),
 // Item interp start variable
 ZCurveTime(0.7),
-ItemInterpStartLocation(FVector(0.f))
+ItemInterpStartLocation(FVector(0.f)),
+CameraTargetLocation(FVector(0.f)), 
+bInterping(false),
+// Item interp value of X and Y
+ItemInterpX(0.f), 
+ItemInterpY(0.f), 
 
 {
   // Set this actor to call tick() every frame, you can turn this off to improve performance
@@ -460,6 +469,25 @@ void AItem::ItemInterp(float DeltaTime)
        
        // Scale factor to multiply with CurveValue
        const float DeltaZ = ItemToCamera.Size();
+       
+       const FVector CurrentLocation{ GetActorLocation };
+       // Interp X Value
+       const float InterpXValue = FMath::FInterpTo(
+       CurrentLocation.X, 
+       CameraInterpLocation.X, 
+       DeltaTime, 
+       30.f);
+       
+       // Interp Y Value
+       const float InterpYValue = FMath::FInterpTo(
+       CurrentLocation.Y, 
+       CameraInterpLocation.Y, 
+       DeltaTime, 
+       30.f) ;
+       
+       // Set X And Y InterpLocation to Interp Value
+       ItemLocation.X = InterpXValue;
+       ItemLocation.Y = InterpYValue;
        
        // Adding CurveValue to Z component of initial location ( scale by DeltaZ) 
        ItemLocation.Z += CurveValue * DeltaZ;
