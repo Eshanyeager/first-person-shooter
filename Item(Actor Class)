@@ -22,7 +22,7 @@ UENUM(BlueprintType)
 class enum EItemState : Uint8
 {
  EIS_Pickup UMETA(DisplayName = "Pickup"), 
- EIS_EquipInterp UMETA(DisplayName =" EquipInterp"), 
+ EIS_EquipInterp UMETA(DisplayName =" EquipInterping"), 
  EIS_PickedUp UMETA(DisplayName =" PickedUp"), 
  EIS_Equipped UMETA(DisplayName =" Equipped"), 
  EIS_Falling UMETA(DisplayName =" Falling"), 
@@ -338,7 +338,18 @@ void AItem::SetItemProperties(EItemState State)
        ECollisionEnabled::NoCollision);
        break;
        
-       break;
+       case EItemState::EIS_EquipInterping:
+       PickupWidegt->SetVisibility(false) ;
+       // Set item mesh priperties
+       ItemMesh->SetSimulatePhysics(false);
+       ItemMesh->SetEnableGravity(false) ;
+       ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysicsOnly) ;
+       ItemMesh->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore) ;
+       ItemMesh->SetCollisionResponseToChannel(
+       ECollisionChannel::ECC_WorldStatic, 
+       ECollisionResponse::ECR_Block) ;
+       
      }
 }
 
@@ -399,6 +410,7 @@ void AItem::StartItemCurve(AShooterCharacter* Char)
 
 void AItem::FinishInterping((
 {
+   bInterping = false;
    if(Character) 
    {
       Character->GetPickupitem(this); 
