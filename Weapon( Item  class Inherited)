@@ -29,9 +29,16 @@ private:
     FTimerHandle ThrowWeaponTimer;
     float ThrowWeaponTime;
     bool bFalling;
+    
+    // Ammo count for this weapon
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo", meta=(AllowPeivateAccess = "true")) 
+    int32 Ammo;
 
 public:
    void ThrowWeapon();
+   
+   ForceInline int32 GetAmmo() const {return Ammo;}
+   
 
 
 };
