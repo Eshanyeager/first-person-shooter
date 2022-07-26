@@ -1,0 +1,29 @@
+         /********** Header file *********/
+         
+
+
+#include "ShooterPlayerController.generated.h"
+
+
+UCLASS() 
+class SHOOTER_API AShooterPlayerController : public APlayerController
+{
+    GENERATED_BODY()
+    
+public:
+    AShooterPlayerController();
+private:
+    
+     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget", meta = (AllowPrivateAccess = "true")) 
+     TSubClassOf<class UUserWidget> HudOverLayClass;
+};
+
+
+
+
+
+
+
+
+
+
