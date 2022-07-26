@@ -12,11 +12,51 @@ class SHOOTER_API AShooterPlayerController : public APlayerController
     
 public:
     AShooterPlayerController();
-private:
     
+protected:
+    virtual void BeginPlay() override;
+private:
+     // Reference to the overall hud display blueprint class
      UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Widget", meta = (AllowPrivateAccess = "true")) 
-     TSubClassOf<class UUserWidget> HudOverLayClass;
+     TSubClassOf<class UUserWidget> HUDOverLayClass;
+     
+     // Variable to holds the overlay widget after creating it
+     UPROPERTY(VisibleAnywhere, BlueprintReadWrite, Category = "Widget", meta = (AllowPrivateAccess = "true")) 
+     UUserWidget* HUDOverLay;
 };
+
+
+
+           /********* Cpp **********/
+           
+
+
+#include "ShooterPlayerControlller.h"
+#include "Blueprint/UserWidget.h"
+
+
+void AShooterPlayerController::AShooterPlayerController() 
+{
+
+}
+
+void AShooterPlayerController::BeginPlay() 
+{
+    Super::BeginPlay();
+    
+    //Check our HUDOverlayClass TSubClassOf variable
+    if(HUDOverLayClass)
+    {
+        HUDOverLay->CreateWidget<UUserWidget>(this, HUDOverLayClass);
+    }
+    if(HUDOverlay) 
+    {
+        HUDOverLay->AddToViewPort() ;
+        HUDOverLay->SetVisibility(ESlateVisibility::Visible) ;
+    }
+}
+
+
 
 
 
