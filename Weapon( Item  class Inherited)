@@ -38,7 +38,8 @@ public:
    void ThrowWeapon();
    
    ForceInline int32 GetAmmo() const {return Ammo;}
-   
+   // Called from Shooter Character Class when firing
+   void DecrementAmmo();
 
 
 };
@@ -98,6 +99,18 @@ void AWeapon::StopFalling()
 {
     bStopFalling = false;
     SetItemState(EItemState::EIS_Pickup);
+}
+
+void AWeapon::DecrmentAmmo()
+{
+    if(Ammo - 1 <= 0)
+    {
+       Ammo = 0;
+    }
+    else
+    {
+       --Ammo;
+    }
 }
 
 
