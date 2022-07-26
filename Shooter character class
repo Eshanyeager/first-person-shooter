@@ -6,6 +6,14 @@
 #include "GameFramework/Character.h"
 #include "ShooterCharacter.generated.h"
 
+UENUM(BlueprintType)
+class enum EAmmoType : Uint8
+{
+   EAT_9mm UMETA(DisplayName = "9mm"), 
+   EAT_AR UMETA(DisplayName = "Assault Rifle"), 
+   
+   EAT_Max UMETA(DisplayName = "DefaultMax")
+};
 
 UCLASS()
 class ShooterCharacterPROJECT_API AShooterCharacter : public ACharacter
@@ -35,6 +43,9 @@ protected:
     
     // Drops currently equipped weapon and equips trace hit item
     void SwapWeapon(AWeapon* WeaponToSwap) ;
+    
+    // initialize ammo map with ammo values
+    void InitializeAmmoMap();
 
 public:
     // Called every frame
@@ -96,6 +107,18 @@ private:
     /** Distance upward from the camera for interp destination */
     UProperty(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
     float CameraInterpElevation;
+    
+    // Map to Keep track of ammo of different mo types
+    UProperty(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
+    TMap<AmmoType, int32>  MapAmmo;
+    
+    // Starting amount of 9mm ammo
+    UProperty(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
+    int32 Starting9mmAmmo;
+    
+    // Starting amount of AR ammo
+    UProperty(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
+    int32 StartingARAmmo;
     
 Public:
     //returns CameraBoom subobject
@@ -265,6 +288,9 @@ bShouldTraceForItems(false)
 // Camera interp locations variable
 CameraInterpDistance(250.f);
 CameraInterpElevation(65.f);
+// Starting Ammo Values
+Starting9mmAmmo(85),
+StartingARAmmo(100),
 
 {
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -308,6 +334,8 @@ void AShooterCharacter::BeginPlay()
       
       // Spawn the default weapon and equip it
       EquipWeapon(SpawnDefaultWeapon());
+      
+      InitializeAmmoMap();
     }
     
 }
@@ -784,10 +812,14 @@ void AShooterCharacter::GetPickupItem(AItem* Item)
     if(Weapon) 
     { 
        SwapWeapon(Weapon);
-    }
-    
+    }   
 }
 
+void AShooterCharacter:InitializeAmmoMap()
+{
+    AmmoMap.Add(EAmmoType::EAT_9mm, Starting9mmAmmo);
+    AmmoMap.Add(EAmmoType::EAT_AR, StartingARAmmo);
+}
 
 
 
