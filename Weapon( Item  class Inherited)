@@ -53,7 +53,8 @@ public:
 
 AWeappon()::AWeapon():
 ThrowWeaponTime(0.7f),
-bFalling(false)
+bFalling(false), 
+Ammo(0);
 {
    PrimaryActorTick. bCanEverTick = true;
 }
