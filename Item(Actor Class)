@@ -364,12 +364,10 @@ void AItem::SetItemProperties(EItemState State)
        ItemMesh->SetSimulatePhysics(false);
        ItemMesh->SetEnableGravity(false) ;
        ItemMesh->SetVisibility(true) ;
-       ItemMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysicsOnly) ;
        ItemMesh->SetCollisionResponseToAllChannels(
        ECollisionResponse::ECR_Ignore) ;
-       ItemMesh->SetCollisionResponseToChannel(
-       ECollisionChannel::ECC_WorldStatic, 
-       ECollisionResponse::ECR_Block) ;
+       ItemMesh->SetCollisionEnabled(
+       ECollisionEnabled::NoCollision) ;
        
        // Set Areashpere properties
        AreaShpere->SetCollisionResponseToAllChannels(
