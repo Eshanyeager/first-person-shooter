@@ -710,8 +710,11 @@ void AShooterCharacter::FinishCrosshairBulletFire()
 
 void AShooterCharacter::FireButtonPressed() 
 {
-  bFireButtonPressed = true;
-  StartFireTimer() ;
+  if(WeaponHasAmmo()) 
+    {
+     bFireButtonPressed = true;
+     StartFireTimer() ;
+    }
 }
 
 void AShooterCharacter::FireButtonReleased() 
@@ -734,11 +737,14 @@ void AShooterCharacter::StartFireTimer()
 }
 void AShooterCharacter::AutoFireReset() 
 {
-  bShouldFire = true;
-  if(bFireButtonPressed) 
-   { 
-     StartFireTimer() ;
-   }
+   if(WeaponHasAmmo)
+    {
+      bShouldFire = true;
+      if(bFireButtonPressed) 
+      { 
+         StartFireTimer() ;
+      }
+    }
 }
 
 void AShooterCharacter::TraceUnderCrosshair(FHitResult& OutHitResult, FVecto& OutHitLocation) 
