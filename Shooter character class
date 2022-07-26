@@ -541,6 +541,12 @@ void AShooterCharacter::FireButton()
      } 
      // Start Bullet Fire Timer For Crosshair 
      StartCrosshairBulletFire() ;
+     
+     if(EquippedWeapon)
+     {
+        // Substaract 1 from from weapon ammo
+        EquippedWeapon->DecrementAmmo() ;
+     }
 }
 
 void AShooterCharacter::SelectButtonPressed() 
