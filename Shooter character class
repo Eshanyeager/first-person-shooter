@@ -15,6 +15,17 @@ class enum EAmmoType : Uint8
    EAT_Max UMETA(DisplayName = "DefaultMax")
 };
 
+UENUM(BlueprintType)
+class enum ECombatState : Uint8
+{
+   ECS_Unoccupied UMETA(DisplayName = "Unoccupied"),
+   ECS_FireTimerInProgress UMETA(DisplayName = "FireTimerInProgress"),
+   ECS_Reloading UMETA(DisplayName = "Reloading"),
+   
+   ECS_Max UMETA(DisplayName = "DefaultMax"),
+};
+
+
 UCLASS()
 class ShooterCharacterPROJECT_API AShooterCharacter : public ACharacter
 {
@@ -49,6 +60,14 @@ protected:
     
     // Check to make sure our weapon has ammo
     bool WeaponHasAmmo();
+    
+    void PlayFireSound() ;
+    
+    void SendBullets() ;
+    
+    void PlayGunFireMontage() ;
+    
+    
 
 public:
     // Called every frame
@@ -122,6 +141,10 @@ private:
     // Starting amount of AR ammo
     UProperty(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
     int32 StartingARAmmo;
+    
+    // Combat State for reload and fire if unoccupied
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", mera = (AllowPrivateAccess = "true"))
+    ECombatState CombatState;
     
     
 Public:
@@ -295,6 +318,8 @@ CameraInterpElevation(65.f);
 // Starting Ammo Values
 Starting9mmAmmo(85),
 StartingARAmmo(100),
+// Variables for combat state
+CombatState(ECombatState_Unoccupied), 
 
 {
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -501,15 +526,18 @@ void AShooterCharacter::MoveRight(float Value)
      AddMovementInput(Direction, Value);
 }
 
-
-void AShooterCharacter::FireButton() 
+void AShooterCharacter::PlayFireSound()
 {
-    if(EquippedWeapon == nullptr) return;
-    if(FireSound) 
+   // Play fire sound
+   if(FireSound) 
      {
        UGameplayStatics::PlaySound2D(this, FireSound);
      }
-     
+}
+
+void AShooterCharacter::SendBullets() 
+{
+     // Send bullets
      const UskeletalMeshSocket* BarrelSocket = EquippedWeapon->GetItemMesh()->GetSocketByName("BarrelSocket");
      if(BarrelSocket) 
      {
@@ -518,13 +546,6 @@ void AShooterCharacter::FireButton()
      if(MuzzleFlash) 
      {
        UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SocketTransform);
-     }
-     
-     UAnimInstance* AnimInstanace = GetMesh()->GetAnimInstance();
-     if(AnimInstanace && FireMontage) 
-     {
-       AnimInstanace->Montage_Play(FireMontage);
-       AnimInstanace->Montage_JumptToSection(FName("StartFire")) ;
      }
      
      FVector BeamEnd;
@@ -542,12 +563,34 @@ void AShooterCharacter::FireButton()
      } 
      // Start Bullet Fire Timer For Crosshair 
      StartCrosshairBulletFire() ;
-     
-     if(EquippedWeapon)
+}
+
+void AShooterCharacter::PlayGunFireMontage()
+{
+    // Play Weapon fire montage
+    UAnimInstance* AnimInstanace = GetMesh()->GetAnimInstance();
+     if(AnimInstanace && FireMontage) 
      {
-        // Substaract 1 from from weapon ammo
-        EquippedWeapon->DecrementAmmo() ;
+       AnimInstanace->Montage_Play(FireMontage);
+       AnimInstanace->Montage_JumptToSection(FName("StartFire")) ;
      }
+}
+
+void AShooterCharacter::FireButton() 
+{
+    if(EquippedWeapon == nullptr) return;
+    if(CombatState != ECombatState::ECS_Unoccupied) return
+    
+    if(WeaponHasAmmo) 
+    {
+       PlayFireSound();
+       SendBullets();
+       PlayGunFireMontage();
+       // Substaract 1 from from weapon ammo
+       EquippedWeapon->DecrementAmmo();
+       
+       StartFireatimer();
+    }   
 }
 
 void AShooterCharacter::SelectButtonPressed() 
@@ -717,11 +760,8 @@ void AShooterCharacter::FinishCrosshairBulletFire()
 
 void AShooterCharacter::FireButtonPressed() 
 {
-  if(WeaponHasAmmo()) 
-    {
-     bFireButtonPressed = true;
-     StartFireTimer() ;
-    }
+  bFireButtonPressed = true;
+  FireWeapon() ;
 }
 
 void AShooterCharacter::FireButtonReleased() 
@@ -732,10 +772,9 @@ void AShooterCharacter::FireButtonReleased()
 
 void AShooterCharacter::StartFireTimer() 
 {
-   if(bShouldFire) 
-   {
-     FireButton();
-     bShouldFire = false;
+    
+     CombatState = ECombatState::ECS_FireTimerInProgress;
+     
      GetWorldTimerManager.SetTimer(
      AutoFireTimer, 
      this, 
@@ -744,14 +783,20 @@ void AShooterCharacter::StartFireTimer()
 }
 void AShooterCharacter::AutoFireReset() 
 {
+   CombatState = ECombatState::ECS_Unoccupied;
+   
    if(WeaponHasAmmo)
-    {
-      bShouldFire = true;
+   { 
       if(bFireButtonPressed) 
       { 
-         StartFireTimer() ;
+          FireWeapon();
       }
-    }
+   }
+   else
+   {
+      // Reload the Weapon
+      
+   }
 }
 
 void AShooterCharacter::TraceUnderCrosshair(FHitResult& OutHitResult, FVecto& OutHitLocation) 
