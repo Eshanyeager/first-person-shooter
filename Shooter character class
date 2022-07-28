@@ -50,6 +50,31 @@ protected:
     // called when fire button is pressed
     void FireButton() ;
     
+    void FireButtonPresses() ;
+    void FireButtonReleased() ;
+    
+    void StartFireTimer(); 
+    
+    void CameraInterpZoom(float DeltaTime);
+    
+    void CalculateCrosshairSpread(float DeltaTime);
+    
+    // Multiplier Component For Cross hair Spread
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs") 
+    float CrosshariSpreadMultiplier;
+    
+    // Aiming When Button Pressed
+    void AimingButtonPressed();
+    
+    // Stop Aiming When Button Released
+    void AimningButtonReleased();
+    
+    void StarCrosshairBulletFire() ;
+     
+    void FinishCrosshaieBulletFire() ;
+ 
+    void AutoFireReset();
+    
     bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation) ;
     
     // Trace Item Under Crosshair
@@ -70,6 +95,9 @@ protected:
     // Buttons for dropping weapon
     void SelectButtonPress() ;
     void SelectButtonRelease() ;
+    
+    // For Crosshair Spread when Shooting
+    void ShootTimeDuration() ;
     
     // Drops currently equipped weapon and equips trace hit item
     void SwapWeapon(AWeapon* WeaponToSwap) ;
@@ -119,6 +147,37 @@ private:
     // Aiming Button for Zooming
     bool bAiming;
     
+    // Rate for Automatic Gun Fire
+    float AutomaticFireRate;
+    
+    //Sets Time Between Gunshots
+    FTimerHandle AutoFireTimer;
+    
+    // Velocity component for cross hair spread
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
+    float CrosshairVelocityFactor;
+    
+    // Is In Air Component for Crosshair spread
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
+    float CrosshairIsInAirFactor;
+    
+    // Aim Component For Crosshair spread
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
+    float CrosshairAimFactor;
+    
+    // Shooting Component for Crosshair spread
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
+    float CrosshairShootingFactor;
+    
+    // true When We can Fire, false When Waiting for timer
+    bool bShouldFire;
+    
+    // Left Mouse Button Pressed
+    bool bFireButtonPressed;
+    bool bFiringBullet;
+    FTimerHandle CrosshairShootTimer;
+    
+    
     // Spawning impact particles on bullet hit
     UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
     class UParticleSystem* ImpactParticles;
@@ -157,6 +216,12 @@ private:
     // Camera Value for Zoomed FOV
     float CameraZoomedFov;
     
+    // Current CameraFov Value
+    float CameraCurrentFov;
+    
+    // Interpolation while Zooming
+    float InterpSpeed;
+    
     /** Distance upward from the camera for interp destination */
     UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
     float CameraInterpElevation;
@@ -187,75 +252,8 @@ Public:
     
     ForceInline bool GetAiming() const { return bAiming ;}
     
-    // Aiming When Button Pressed
-    void AimingButtonPressed();
-    
-    // Stop Aiming When Button Released
-    void AimningButtonReleased();
-    
-    // Current CameraFov Value
-    float CameraCurrentFov;
-    
-    // Interpolation while Zooming
-    float InterpSpeed;
-    
-    void CameraInterpZoom(float DeltaTime);
-    
-    // Multiplier Component For Cross hair Spread
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs") 
-    float CrosshariSpreadMultiplier;
-    
-    // Velocity component for cross hair spread
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
-    float CrosshairVelocityFactor;
-    
-    // Is In Air Component for Crosshair spread
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
-    float CrosshairIsInAirFactor;
-    
-    // Aim Component For Crosshair spread
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
-    float CrosshairAimFactor;
-    
-    // Shooting Component for Crosshair spread
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
-    float CrosshairShootingFactor;
-    
     UFUNCTION() 
     float GetCrosshairSpreadMultiplier();
-    
-    void CalculateCrosshairSpread(float DeltaTime);
-    
-    
-    // For Crosshair Spread when Shooting
-    void ShootTimeDuration() ;
-    bool bFiringBullet;
-    FTimerHandle CrosshairShootTimer;
-    
-    
-    void StarCrosshairBulletFire() ;
-    UFUNCTION() 
-    void FinishCrosshaieBulletFire() ;
-    
-    // true When We can Fire, false When Waiting for timer
-    bool bShouldFire;
-    
-    // Left Mouse Button Pressed
-    bool bFireButtonPressed;
-    
-    // Rate for Automatic Gun Fire
-    float AutomaticFireRate;
-    
-    //Sets Time Between Gunshots
-    FTimerHandle AutoFireTimer
-    
-    void FireButtonPresses() ;
-    void FireButtonReleased() ;
-    
-    void StartFireTimer();
-    
-    UFUNCTION() 
-    void AutoFireReset();
     
     ForceInline int8 GetOverlappedItemCount() const {return OverlappedItemCount;}
     
