@@ -6,6 +6,7 @@
 
 #include "CoreMinimal.h"
 #include "Item.h"
+#include "AmmoType.h"
 #include "Weapon.Generated.h"
 
 UENUM()
@@ -42,6 +43,10 @@ private:
     // Weapon Types
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ammo", meta = (AllowPrivateAccess = "true")) 
     EWeaponType WeaponType;
+    
+    // Ammo types
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ammo", meta = (AllowPrivateAccess = "true")) 
+    EAmmoType AmmoType;
 
 public:
    void ThrowWeapon();
@@ -49,7 +54,9 @@ public:
    ForceInline int32 GetAmmo() const {return Ammo;}
    // Called from Shooter Character Class when firing
    void DecrementAmmo();
-
+   
+   ForceInline EWeaponType GetWeaponType() const {return WeaponType;}
+   ForceInline EAmmoType GetAmmoType() const {return AmmoType;}
 
 };
 
@@ -66,6 +73,7 @@ ThrowWeaponTime(0.7f),
 bFalling(false), 
 Ammo(0), 
 WeaponType(EWeaponType::EWT_SubmachineGun),
+AmmoType(EAmmoType::EAT_9mm) 
 {
    PrimaryActorTick. bCanEverTick = true;
 }
