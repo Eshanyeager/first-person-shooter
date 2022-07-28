@@ -109,6 +109,7 @@ protected:
     
     void ReloadWeapon();
     
+    UFUNCTION(BlueprintCallable) 
     void FinishReloading();
     
     // Check to see whether or not carrying ammo
