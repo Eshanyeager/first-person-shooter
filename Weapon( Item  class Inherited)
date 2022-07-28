@@ -28,9 +28,8 @@ public:
 virtual void Tick(float DeltaTime) override;
 
 protected:
-     void StopFalling();
-    
-
+    void StopFalling();
+    void ThrowWeapon();   
 private:
     FTimerHandle ThrowWeaponTimer;
     float ThrowWeaponTime;
@@ -56,7 +55,6 @@ private:
     FName ReloadMontageSection;
 
 public:
-   void ThrowWeapon();
    
    ForceInline int32 GetAmmo() const {return Ammo;}
    // Called from Shooter Character Class when firing
@@ -102,7 +100,7 @@ void AWeapon::Tick(flaot DeltaTime)
    }
 }
 
-void AWeapon::ThrowWeaponTime() 
+void AWeapon::ThrowWeapon() 
 {
    FRotator MeshRotation{ 0.f, GetItemMesh()->GetComponentRotation.().Yaw, 0.f};
    GetItemMesh()->SetWorldRotation(MeshRotation, false, nullptr, ETeleportType::TelePortPhysics) ;
