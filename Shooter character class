@@ -39,6 +39,25 @@ protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
     
+    // Handles input for moving forward and backward.
+    UFUNCTION()
+    void MoveForward(float Value);
+    
+    // Handles input for moving right and left.
+    UFUNCTION()
+    void MoveRight(float Value);
+    
+    // called when fire button is pressed
+    void FireButton() ;
+    
+    bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation) ;
+    
+    // Trace Item Under Crosshair
+    bool TraceUnderCrosshair(FHitResult& OutHitResult, FVector& OutHitLocation);
+    
+    // Show Widget when tracing
+    void TraceForItems();
+    
     // Spawn default weapon and equips it
     Class AWeapon* SpawnDefaultWeapon();
     
@@ -78,32 +97,38 @@ public:
 
 private:
     //camera positioning behind the character
-    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true)) 
+    UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true)) 
     class USpringArmComponent* CameraBoom;
    
     //Camera That Follows Character
-    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true)) 
+    UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = Camera, meta = (AllowPrivateAccess = true)) 
     class UCameraComponent* FollowCamera;
     
     // sound for firing weapon
-    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
+    UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
     class USoundCue* FireSound;
     
     // Spawning Flash At Tip of BarrelSocket
-    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
+    UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
     class UParticleSystem* MuzzleFlash;
     
     // Montage For Firing Weapon
-    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true) ) 
+    UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true) ) 
     class UAnimMontage* FireMontage;
     
+    // Aiming Button for Zooming
+    bool bAiming;
+    
     // Spawning impact particles on bullet hit
-    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
+    UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
     class UParticleSystem* ImpactParticles;
     
     // spawning beam trails
-    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
+    UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
     class UParticleSystem* BeamParticles;
+    
+    // Hide widget when not tracing
+    float TraceHitItemLastFrame;
     
     // True if we should trace every frame for item
     bool bShouldTraceForItems;
@@ -112,34 +137,40 @@ private:
     int8 OverlappedItemCount;
     
     // Currently Equippes Weapon
-    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
+    UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
     class AWeapon* EquippedWeapon;
     
     // Set this in blueprint for default weapon class
     TSubClassOf<AWeapon> DefaultWeaponClass;
     
     // Item currently hit by our trace in traceforitem
-    UProperty(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
+    UPROPERTY(VisibleAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true)) 
     AItem* TraceHitItem;
     
     /** Distance outward from camera for interp destination */
-    UProperty(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
+    UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
     float CameraInterpDistance;
     
+    // Camera set default Field of View value
+    float CameraDefaultFov;
+    
+    // Camera Value for Zoomed FOV
+    float CameraZoomedFov;
+    
     /** Distance upward from the camera for interp destination */
-    UProperty(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
+    UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
     float CameraInterpElevation;
     
     // Map to Keep track of ammo of different mo types
-    UProperty(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
-    TMap<AmmoType, int32>  MapAmmo;
+    UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
+    TMap<EAmmoType, int32>  MapAmmo;
     
     // Starting amount of 9mm ammo
-    UProperty(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
+    UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
     int32 Starting9mmAmmo;
     
     // Starting amount of AR ammo
-    UProperty(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
+    UPROPERTY(EditAnywhere, BluePrintReadOnly, Category = Combat, meta = (AllowPrivateAccess = true))
     int32 StartingARAmmo;
     
     // Combat State for reload and fire if unoccupied
@@ -156,28 +187,6 @@ Public:
     
     ForceInline bool GetAiming() const { return bAiming ;}
     
-    // Handles input for moving forward and backward.
-    UFUNCTION()
-    void MoveForward(float Value);
-
-    // Handles input for moving right and left.
-    UFUNCTION()
-    void MoveRight(float Value);
-    
-    // called when fire button is pressed
-    void FireButton() ;
-    
-    bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation) ;
-   
-    // Aiming Button for Zooming
-    bool bAiming;
-    
-    // Camera set default Field of View value
-    float CameraDefaultFov;
-    
-    // Camera Value for Zoomed FOV
-    float CameraZoomedFov;
-    
     // Aiming When Button Pressed
     void AimingButtonPressed();
     
@@ -188,28 +197,28 @@ Public:
     float CameraCurrentFov;
     
     // Interpolation while Zooming
-    float InterpSpeed
+    float InterpSpeed;
     
     void CameraInterpZoom(float DeltaTime);
     
     // Multiplier Component For Cross hair Spread
-    UPorpety(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs") 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs") 
     float CrosshariSpreadMultiplier;
     
     // Velocity component for cross hair spread
-    UPorpety(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
     float CrosshairVelocityFactor;
     
     // Is In Air Component for Crosshair spread
-    UPorpety(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
     float CrosshairIsInAirFactor;
     
     // Aim Component For Crosshair spread
-    UPorpety(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
     float CrosshairAimFactor;
     
     // Shooting Component for Crosshair spread
-    UPorpety(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Crosshairs")
     float CrosshairShootingFactor;
     
     UFUNCTION() 
@@ -248,19 +257,10 @@ Public:
     UFUNCTION() 
     void AutoFireReset();
     
-    // Trace Item Under Crosshair
-    bool TraceUnderCrosshair(FHitResult& OutHitResult, FVector& OutHitLocation);
-    
     ForceInline int8 GetOverlappedItemCount() const {return OverlappedItemCount;}
     
     // Add/Subtracts To/From OverlappedItemCount and Update bShouldTraceForItems//
     void IncrememtOverlappedItemCount(int8 Amount) ;
-    
-    // Show Widget when tracing
-    void TraceForItems();
-    
-    // Hide widget when not tracing
-    float TraceHitItemLastFrame;
     
     FVector GetCameraInterpLocation();
     
