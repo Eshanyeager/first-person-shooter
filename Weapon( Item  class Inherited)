@@ -40,6 +40,10 @@ private:
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Properties", meta=(AllowPeivateAccess = "true")) 
     int32 Ammo;
     
+    // Maximum bullet capacity
+    UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Weapon Properties", meta=(AllowPeivateAccess = "true")) 
+    int32 MagazineCapacity;
+    
     // Weapon Types
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess = "true")) 
     EWeaponType WeaponType;
@@ -61,7 +65,7 @@ public:
    ForceInline EWeaponType GetWeaponType() const {return WeaponType;}
    ForceInline EAmmoType GetAmmoType() const {return AmmoType;}
    ForceInline FName GetReloadMontageSection() const {return ReloadMontageSection;}
-
+   ForceInline int32 GetMagazineCapacity() const {return MagazineCapacity;}
 };
 
 
@@ -75,10 +79,11 @@ public:
 AWeappon()::AWeapon():
 ThrowWeaponTime(0.7f),
 bFalling(false), 
-Ammo(0), 
+Ammo(30),
+MagazineCapacity(30), 
 WeaponType(EWeaponType::EWT_SubmachineGun),
 AmmoType(EAmmoType::EAT_9mm),
-ReloadMontageSection(FName(TEXT("Reload SMG"))),
+ReloadMontageSection(FName(TEXT("Reload SMG")))
 {
    PrimaryActorTick. bCanEverTick = true;
 }
