@@ -470,15 +470,17 @@ void AShooterCharacter::ReloadButtonPressed()
 
 void AShooterCharacter::ReloadWeapon()
 {
-    if(CombatState != ECombatState::ECS_Unoccupied) return false;
+    if(CombatState != ECombatState::ECS_Unoccupied) return;
+    if(EquippedWeapon == nullptr) return;
     
     if(CarryingAmmo())
     {
+        CombatState = ECombatState::ECS_Reloading;
         UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
         if(AnimInstance && ReloadMontage) 
         {
            AnimInstance->Montage_Play(ReloadMontage);
-           AnimInstance->Montage_JumpToSection(ReloadMontageSection);
+           AnimInstance->Montage_JumpToSection(EquippedWeapon->GetReloadMontageSection());
         }
     }
 }
