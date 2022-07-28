@@ -109,6 +109,9 @@ protected:
     
     void ReloadWeapon();
     
+    // Check to see whether or not carrying ammo
+    bool CarryingAmmo();
+    
 
 public:
     // Called every frame
@@ -469,7 +472,7 @@ void AShooterCharacter::ReloadWeapon()
 {
     if(CombatState != ECombatState::ECS_Unoccupied) return false;
     
-    if(CarryingAmmo)
+    if(CarryingAmmo())
     {
         UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
         if(AnimInstance && ReloadMontage) 
@@ -477,6 +480,17 @@ void AShooterCharacter::ReloadWeapon()
            AnimInstance->Montage_Play(ReloadMontage);
            AnimInstance->Montage_JumpToSection(ReloadMontageSection);
         }
+    }
+}
+
+bool AShooterCharacter::CarryingAmmo() 
+{
+    if(EquippedWeapon == nullptr) return false;
+    
+    auto AmmoType = EquippedWeapon->GetAmmoType();
+    if(AmmoMap.Contains(AmmoType))
+    {
+       return AmmoMap[AmmoType] > 0;
     }
 }
 
