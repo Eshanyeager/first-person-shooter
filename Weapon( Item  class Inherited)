@@ -8,9 +8,14 @@
 #include "Item.h"
 #include "Weapon.Generated.h"
 
-/**
-*
-*/
+UENUM()
+class enum EWeaponType : Uint8
+{
+   EWT_SubmachineGun UMETA(DisplayName = "SubmachineGun"),
+   EWT_AssaultRifle UMETA(DisplayName = "AssaultRifle"), 
+   
+   EWT_Max UMETA(DisplayName = "DefaultMax"), 
+};
 UCLASS()
 class Shooter_API AWeapon : public AItem
 {
@@ -33,6 +38,10 @@ private:
     // Ammo count for this weapon
     UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Ammo", meta=(AllowPeivateAccess = "true")) 
     int32 Ammo;
+    
+    // Weapon Types
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Ammo", meta = (AllowPrivateAccess = "true")) 
+    EWeaponType WeaponType;
 
 public:
    void ThrowWeapon();
@@ -55,7 +64,8 @@ public:
 AWeappon()::AWeapon():
 ThrowWeaponTime(0.7f),
 bFalling(false), 
-Ammo(0);
+Ammo(0), 
+WeaponType(EWeaponType::EWT_SubmachineGun),
 {
    PrimaryActorTick. bCanEverTick = true;
 }
