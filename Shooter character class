@@ -520,11 +520,18 @@ void AShooterCharacter::FinishReloading()
       
       if(MagEmptySpace > CarriedAmmo) 
       {
-      
+         // Reload the magazine with all ammo we have
+         EquippedWeapon->ReloadAmmo(CarriedAmmo);
+         CarriedAmmo = 0;
+         AmmoMap.Add(AmmoType, CarriedAmmo);
       }
       else
       {
-      
+          // Fill the magazine
+          EquippedWeapon->ReloadAmmo(MagEmptySpace);
+          CarriedAmmo -= MagEmptySpace;
+          AmmoMap(AmmoType, CarriedAmmo);
+          
       }
       
    }
