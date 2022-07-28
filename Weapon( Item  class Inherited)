@@ -66,6 +66,8 @@ public:
    ForceInline EAmmoType GetAmmoType() const {return AmmoType;}
    ForceInline FName GetReloadMontageSection() const {return ReloadMontageSection;}
    ForceInline int32 GetMagazineCapacity() const {return MagazineCapacity;}
+   
+   void ReloadAmmo(int32 Ammo);
 };
 
 
@@ -139,6 +141,12 @@ void AWeapon::DecrmentAmmo()
     {
        --Ammo;
     }
+}
+
+void AWeapon::ReloadAmmo() 
+{
+   CheckF(Ammo + Amount <= MagazineCapacity, TEXT("Attempted To Reload More Than Magazine Capacity!"))
+       Ammo += Amount;
 }
 
 
