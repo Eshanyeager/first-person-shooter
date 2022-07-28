@@ -1,0 +1,9 @@
+#pragma once
+
+
+ENUM(BlueprintType)
+class enum EAmmoType : Uint8
+{
+    
+
+};
