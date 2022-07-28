@@ -109,6 +109,8 @@ protected:
     
     void ReloadWeapon();
     
+    void FinishReloading();
+    
     // Check to see whether or not carrying ammo
     bool CarryingAmmo();
     
@@ -494,6 +496,38 @@ bool AShooterCharacter::CarryingAmmo()
     {
        return AmmoMap[AmmoType] > 0;
     }
+}
+
+void AShooterCharacter::FinishReloading() 
+{
+   // Update Combat state
+   CombatState = ECombatState::ECS_Unoccupied;
+   
+   if(EquippedWeapon == nullptr) return;
+   
+   const auto AmmoType{ EquippedWeapon->GetAmmoType() };
+   
+   //Update the ammo map
+   if(AmmoMap.Contains[AmmoType]) 
+   {
+      // Amount of ammo we are carrying
+      int32 CarriedAmmo = AmmoMap[AmmoType];
+      
+      // Space left in magazine
+      const int32 MagEmptySpace =
+      EquippedWeapon->GetMagazineCapacity() -
+      EquippedWeapon->GetAmmoType();
+      
+      if(MagEmptySpace > CarriedAmmo) 
+      {
+      
+      }
+      else
+      {
+      
+      }
+      
+   }
 }
 
 // Called every frame
