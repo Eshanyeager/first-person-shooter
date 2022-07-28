@@ -107,13 +107,16 @@ protected:
     
     // Check to make sure our weapon has ammo
     bool WeaponHasAmmo();
+ 
+    // Fire Weapon properties
+    void PlayFireSound();
+    void SendBullets();
+    void PlayGunFireMontage();
     
-    void PlayFireSound() ;
+    // button for reloading weapon
+    void ReloadButtonPressed();
     
-    void SendBullets() ;
-    
-    void PlayGunFireMontage() ;
-    
+    void ReloadWeapon();
     
 
 public:
@@ -239,9 +242,11 @@ private:
     int32 StartingARAmmo;
     
     // Combat State for reload and fire if unoccupied
-    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", mera = (AllowPrivateAccess = "true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
     ECombatState CombatState;
     
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true")) 
+    UAnimMontage* ReloadMontage;
     
 Public:
     //returns CameraBoom subobject
@@ -464,6 +469,26 @@ void AShooterCharacter::DropWeapon()
     
 }
 
+void AShooterCharacter::ReloadButtonPressed()
+{
+     ReloadWeapon();
+}
+
+void AShooterCharacter::ReloadWeapon()
+{
+    if(CombatState != ECombatState::ECS_Unoccupied) return false;
+    
+    if(CarryingAmmo)
+    {
+        UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+        if(AnimInstance && ReloadMontage) 
+        {
+           AnimInstance->Montage_Play(ReloadMontage);
+           AnimInstance->Montage_JumpToSection(ReloadMontageSection);
+        }
+    }
+}
+
 // Called every frame
 void AShooterCharacter::Tick( float DeltaTime )
 {
@@ -498,7 +523,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     IE-Pressed, this, &AShooterCharafter::SelectButtonPressed) ;
     PlayerInputComponent->BindAction("SelectButtonReleased") , 
     IE_Released, this, &AShooterCharacter::SelectButtonReleased);
-    
+    PlayerInputComponent->BindAction("Reload Button"), IE_Pressed, this, 
+    &AShooterCharacter::ReloadButtonPressed);
 }
 
 void AShooterCharacter::MoveForward(float Value)
@@ -577,7 +603,7 @@ void AShooterCharacter::PlayGunFireMontage()
 void AShooterCharacter::FireButton() 
 {
     if(EquippedWeapon == nullptr) return;
-    if(CombatState != ECombatState::ECS_Unoccupied) return
+    if(CombatState != ECombatState::ECS_Unoccupied) return;
     
     if(WeaponHasAmmo) 
     {
@@ -587,7 +613,7 @@ void AShooterCharacter::FireButton()
        // Substaract 1 from from weapon ammo
        EquippedWeapon->DecrementAmmo();
        
-       StartFireatimer();
+       StartFiretimer();
     }   
 }
 
@@ -607,7 +633,7 @@ void AShooterCharacter::SwapWeapon(AWeapon* WeaponToSwap)
      DropWeapon() ;
      EquipWeapon(WeaponToSwap) ;
      TraceHitItem = nullptr;
-     TraceHitItemLastFrame =nullptr;
+     TraceHitItemLastFrame = nullptr;
 }
 
 
@@ -793,7 +819,7 @@ void AShooterCharacter::AutoFireReset()
    else
    {
       // Reload the Weapon
-      
+      ReloadWeapon();
    }
 }
 
