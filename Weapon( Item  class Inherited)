@@ -53,6 +53,13 @@ private:
     
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess = "true")) 
     FName ReloadMontageSection;
+    
+    // true whether or not moving clip to reload
+    bool bMovingClip;
+    
+    // Clip bone name
+    UPROPERTY(EditAnywhere, BlueprintRradOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess = "true")) 
+    FName ClipBoneName;
 
 public:
    
@@ -64,8 +71,10 @@ public:
    ForceInline EAmmoType GetAmmoType() const {return AmmoType;}
    ForceInline FName GetReloadMontageSection() const {return ReloadMontageSection;}
    ForceInline int32 GetMagazineCapacity() const {return MagazineCapacity;}
+   ForceInline FName GetClipBoneName() const { return ClipBoneName; }
    
    void ReloadAmmo(int32 Ammo);
+   ForceInline void SetMovingClip(bool Move) {bMovingClip = Move;}
 };
 
 
@@ -83,7 +92,8 @@ Ammo(30),
 MagazineCapacity(30), 
 WeaponType(EWeaponType::EWT_SubmachineGun),
 AmmoType(EAmmoType::EAT_9mm),
-ReloadMontageSection(FName(TEXT("Reload SMG")))
+ReloadMontageSection(FName(TEXT("Reload SMG"))), 
+ClipBoneName(TEXT("Hand_L"))
 {
    PrimaryActorTick. bCanEverTick = true;
 }
