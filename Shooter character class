@@ -115,6 +115,12 @@ protected:
     // Check to see whether or not carrying ammo
     bool CarryingAmmo();
     
+    // Grabs the clip while reloading
+    void GrabClip();
+    
+    // Release the clip while done reloading
+    void ReleaseClip();
+    
 
 public:
     // Called every frame
@@ -244,6 +250,13 @@ private:
     
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true")) 
     UAnimMontage* ReloadMontage;
+    
+    // Transform of clip when we first grab clip during reloading
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", mera = (AllowPrivateAccess = "true")) 
+    FTransForm ClipTransform;
+    
+    // Scene component attach to character during reload
+    USceneComponent* HandSceneComp;
     
 Public:
     //returns CameraBoom subobject
@@ -961,6 +974,25 @@ bool AShooterCharacter::WeaponHasAmmo()
     if(EquippedWeapon == nullptr) return;
     
     return EquippedWeapon->GetAmmo() > 0;
+}
+
+void AShooterCharacter::GrabClip() 
+{
+   if(EquippedWeapon == nullptr) return;
+   
+   int32 ClipBoneIndex{ EquippedWeapon->GetItemMesh()->GetBoneIndex(EquippedWeapon->GetClipBoneName())};
+   ClipTransform = EquippedWeapon()->GetItemMesh()->GetBoneBoneTransform(ClipBoneIndex);
+   
+   FAttachmentTransformRules AttachmentRules(EAttachmentRules::KeepRelative, true);
+   HandSceneComponent->AttachToComponent(GetMesh(), AttachmentRules, FName("TEXT("Hand_L)));
+   HandSceneComponent->SetWorldTransform(ClipTransform);
+   
+   EquippedWeapon->SetMovingClip(true) ;
+}
+
+void AShooterCharacter::ReleaseClip()
+{
+   EquippedWeapon->SetMovingClip(false);
 }
 
 
