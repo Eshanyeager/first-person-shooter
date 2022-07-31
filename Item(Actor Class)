@@ -153,7 +153,7 @@ private:
       
       // Weapon Equip Sound
       UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true"))
-      USoundCue* EquipSound;
+      USoundCue* EquippedSound;
       
 public:
       
@@ -164,6 +164,8 @@ public:
       void SetItemState(EItemState State);
       ForceInline USkeletalMeshComponent* GetItemMesh() const {return ItemMesh;}
       void StartItemCurve(AShooterCharacter* Char) ;
+      ForceInline GetPickupSound() const {return PickupSound;}
+      ForceInline GetEquippedSound() const {return EquippesSound;}
 } 
 
 
