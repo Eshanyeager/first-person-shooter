@@ -256,7 +256,7 @@ private:
     FTransForm ClipTransform;
     
     // Scene component attach to character during reload
-    USceneComponent* HandSceneComp;
+    USceneComponent* HandSceneComponent;
     
 Public:
     //returns CameraBoom subobject
@@ -362,6 +362,8 @@ CombatState(ECombatState_Unoccupied),
     GetCharacterMovement()->JumpZVelocity = 300.f;
     GetcharacterMovement()->AirControl = 0.2f;
     
+    // Create Hand Scene Component
+    HandSceneComponent = CreateDefaultSubobject<USceneComponent>(TEXT("HandSceneComp"));
 }
 
 // Called when the game starts or when spawned
@@ -979,6 +981,7 @@ bool AShooterCharacter::WeaponHasAmmo()
 void AShooterCharacter::GrabClip() 
 {
    if(EquippedWeapon == nullptr) return;
+   if(HandSceneComponent == nullptr) return;
    
    int32 ClipBoneIndex{ EquippedWeapon->GetItemMesh()->GetBoneIndex(EquippedWeapon->GetClipBoneName())};
    ClipTransform = EquippedWeapon()->GetItemMesh()->GetBoneBoneTransform(ClipBoneIndex);
