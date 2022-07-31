@@ -147,7 +147,14 @@ private:
       UProperty(VisibleAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true"))
       UCurveFloat* ItemScaleCurve;
       
-   
+      // Weapon pickup sound
+      UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true"))
+      class USoundCue* PickupSound;
+      
+      // Weapon Equip Sound
+      UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true"))
+      USoundCue* EquipSound;
+      
 public:
       
       ForceInline UWidgetCompoment* GetPickupItem() const {return PickupItem;}
