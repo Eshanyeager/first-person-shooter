@@ -63,11 +63,11 @@ private:
     UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true))
     bool bAiming;
     
-    // Yaw of the character this frame
-    float CharacterYaw;
+    // Yaw of the character this frame; Only updated when standing still and not is in air 
+    float TIPCharacterYaw;
     
-    // Yaw of character for previous frame
-    float CharacterYawLastFrame;
+    // Yaw of character for previous frame; Only updates when standing still and not is in air
+    float TIPCharacterYawLastFrame;
     
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn in place", meta = (AllowPrivateAccess = "true")) 
     float RootYawOffset;
@@ -88,6 +88,12 @@ private:
     // Variable for offset state
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Aim Offset", meta = (AllowPrivateAccess = "true")) 
     EOffsetState OffsetState;
+    
+    // Character yaw this frame
+    float CharacterYaw;
+    
+    // character yaw previous frame
+    float CharacterYawLastFrame;
      
      
 
@@ -197,18 +203,18 @@ private:
       if(Speed > 0) 
       {
           //Don't Turn In Place, Character is moving
-          RootYawOffset = 0.f;
-          CharacterOffsetYaw = ShooterCharacter->GetActorRotation().Yaw;
-          CharacterOffsetYawLastFrame = CharacterOffsetYaw;
+          TIPRootYawOffset = 0.f;
+          TIPCharacterOffsetYaw = ShooterCharacter->GetActorRotation().Yaw;
+          TIPCharacterOffsetYawLastFrame = TIPCharacterOffsetYaw;
           RotationCurve = 0.f;
           RotationCurveLastFrame = 0.f;
           
       }
       else
       {  
-          LastCharacterOffsetYaw = CharacterOffsetYaw;
-          CharacterOffsetYaw = ShooterCharacter->GetActorRotation().Yaw;
-          const float DeltaYaw {CharacterOffsetYaw - LastCharacterOffsetYaw};
+          TIPCharacterOffsetYawLastFrame = TIPCharacterOffsetYaw;
+          TIPCharacterOffsetYaw = ShooterCharacter->GetActorRotation().Yaw;
+          const float DeltaYaw {TIPCharacterOffsetYaw - TIPCharacterOffsetYawLastFrame};
           
           //Root Yaw offset, updated and clamped to 180,-180
           RootYawOffset = UKismetMathLibrary::NormalizeAxis(RootYawOffset - DeltaYaw);       
