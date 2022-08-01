@@ -176,6 +176,13 @@ private:
           RootYawOffset > 0 ? RootYawOffset -= DeltaRotation : RootYawOffset += DeltaRotation;
       }
       
+      const float ABSRootYawOffset { FMath::ABS(RootYawOffset) };
+      if(ABSRootYawOffset > 90.f) 
+      {
+          const float YawExcess{ ABSRootYawOffset - 90.f };
+          RootYawOffset > 0 ? RootYawOffset -= YawExcess : RootYawOffset += YawExcess;
+      }
+      
  }
  
  
