@@ -6,6 +6,16 @@
 #include "Animation/AnimInstance.h"
 #include "ShooterAnimInstance.generated.h"
 
+ENUM(BlueprintType) 
+class enum EOffsetState : Uint8
+{
+    EOS_Hip UMETA(DisplayName = "Hip"),
+    EOS_Reloading UMETA(DisplayName = "Reloading"),
+    EOS_InAir UMETA(DisplayName = "InAir"),
+    EOS_Aiming UMETA(DisplayName = "Aiming"),
+    
+    EOS_Max UMETA(DisplayName = "DefaultMax"),
+};
 
 UCLASS()
 class Shooter_API UShooterAnimInstance : public UAnimInstance
@@ -74,7 +84,10 @@ private:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn in place", meta = (AllowPrivateAccess = "true"))
     // true when reloading, used to prevent aim offset while reloading
     bool bReloading;
-     
+    
+    // Variable for offset state
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Aim Offset", meta = (AllowPrivateAccess = "true")) 
+    EOffsetState OffsetState;
      
      
 
@@ -148,6 +161,23 @@ private:
          LastMovementoffsetYaw = MovementoffsetYaw;
         }
         bAiming = ShooterCharacter->GetAiming();
+        
+        if(bReloading) 
+        {
+           OffsetState = EOffsetState::EOS_Reloading;
+        }
+        else if(bIsInAir)
+        {
+           OffsetState = EOffsetState::EOS_InAir;
+        }
+        else if(ShooterCharacter->GetAiming()) 
+        {
+           OffsetState = EOffsetState::EOS_Aiming;
+        }
+        else
+        {
+           OffsetState = EOffsetState::EOS_Hip;
+        }
     }
     TurnInPlace();
  
