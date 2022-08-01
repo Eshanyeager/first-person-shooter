@@ -156,7 +156,7 @@ private:
           //Don't Turn In Place, Character is moving
           RootYawOffset = 0.f;
           CharacterOffsetYaw = ShooterCharacter->GetActorRotation().Yaw;
-          CharacterOffsetYawLastFrame = 0.f;
+          CharacterOffsetYawLastFrame = CharacterOffsetYaw;
           RotationCurve = 0.f;
           RotationCurveLastFrame = 0.f;
           
