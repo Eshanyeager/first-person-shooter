@@ -277,7 +277,9 @@ Public:
     
     FVector GetCameraInterpLocation();
     
-    void GetPickupItem(AItem* Item) ;
+    void GetPickupItem(AItem* Item);
+    
+    ForceInline GetCombatState() const{return CombatState;}
 };
 
 
