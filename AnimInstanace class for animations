@@ -59,7 +59,7 @@ private:
     // Yaw of character for previous frame
     float CharacterYawLastFrame;
     
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turn in place", meta = (AllowPrivateAccess = "true")) 
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn in place", meta = (AllowPrivateAccess = "true")) 
     float RootYawOffset;
     
     //Rotation Curve value this frame
@@ -67,9 +67,12 @@ private:
     // Rotation Curve Value previous frame
     float RotationCurveLastFrame;
     
-    
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn in place", meta = (AllowPrivateAccess = "true"))
+    // pitch for aim rotation, used in aim offset
     float Pitch;
     
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Turn in place", meta = (AllowPrivateAccess = "true"))
+    // true when reloading, used to prevent aim offset while reloading
     bool bReloading;
      
      
@@ -109,7 +112,7 @@ private:
    
     if(ShooterCharacter) 
     {
-       
+       bReloading = ShooterCharacter->GetCombatState() == ECombatState::ECS_Reloading;
        
        /* get speed of the character from velocity */
        FVector Velocity {ShooterCharacter->GetVelocity()};
