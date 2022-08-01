@@ -61,6 +61,11 @@ private:
     
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turn in place", meta = (AllowPrivateAccess = "true")) 
     float RootYawOffset;
+    
+    //Rotation Curve value this frame
+    float RotationCurve;
+    // Rotation Curve Value previous frame
+    float RotationCurveLastFrame;
      
      
      
@@ -157,8 +162,20 @@ private:
           CharacterOffsetYaw = ShooterCharacter->GetActorRotation().Yaw;
           const float DeltaYaw {CharacterOffsetYaw - LastCharacterOffsetYaw};
           
-          RootYawOffset -= DeltaYaw;
+          //Root Yaw offset, updated and clamped to 180,-180
+          RootYawOffset = UKismetMathLibrary::NormalizeAxis(RootYawOffset - DeltaYaw);       
       }
+      const float Turning{ GetCurveValue(TEXT("Turning")) };
+      if(Turning > 0 ) 
+      {
+          RotationCurve = RotationCurveLastFrame;
+          RotationCurve = GetCurveValue(TEXT("Rotation"));
+          const float DeltaRotation {RotaionCurve - RotationCurveLastFrame};
+          
+          // RootYawOffset > 0 then turn Left, if < 0 the  turn right
+          RootYawOffset > 0 ? RootYawOffset -= DeltaRotation : RootYawOffset += DeltaRotation;
+      }
+      
  }
  
  
