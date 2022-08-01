@@ -93,10 +93,10 @@ private:
     EOffsetState OffsetState;
     
     // Character yaw this frame
-    float CharacterYaw;
+    FRotator CharacterRotation;
     
     // character yaw previous frame
-    float CharacterYawLastFrame;
+    FRotator CharacterRotationLastFrame;
     
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lean", meta = (AllowPrivateAccess = "true"))
     float YawDelta;
@@ -118,8 +118,11 @@ private:
  MovementOffsetYaw(0.f), 
  LastMovementOffsetYaw(0.f),
  bAiming(false), 
- CharacterYaw(0.f), 
- CharacterYawLastFrame(0.f), 
+ TIPCharacterYaw(0.f), 
+ TIPCharacterLastFrame(0.f), 
+ CharacterRotation(FRotator(0.f)), 
+ CharacterRotationLastFrame(FRotator(0.f)),
+ YawDelta(0.f), 
  RootYawOffset(0.f), 
  Pitch(0.f), 
  bReloading(false)
@@ -249,10 +252,12 @@ private:
  {
      if(ShooterCharacter == nullptr) return;
      
-     CharacterYawLastFrame = CharacterYaw;
-     CharacterYaw = ShooterCharacter->GetBaseAimRotation().Yaw;
+     CharacterRotationLastFrame = CharacterRotation;
+     CharacterRotation = ShooterCharacter->GetBaseAimRotation();
+     
+     const FRotator Delta{UKismetMathLibrary::NormalizeDeltaRotator(CharacterRotation, CharacterRotationLastFrame)};
       
-     const float Target{ CharacterYaw - CharacterYawLastFrame/DeltaTime};
+     const float Target{ Delta.Yaw / DeltaTime};
      const float Interp{ FMath::FInterpTo(YawDelta, Target, DeltaTime, 6.f) };
      YawDelta = FMath::Clamp(Interp, -90.f, 90.f); 
  }
