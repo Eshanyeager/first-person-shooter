@@ -73,8 +73,10 @@ public:
    ForceInline int32 GetMagazineCapacity() const {return MagazineCapacity;}
    ForceInline FName GetClipBoneName() const { return ClipBoneName; }
    
-   void ReloadAmmo(int32 Ammo);
+   void ReloadAmmo(int32 Amount);
    ForceInline void SetMovingClip(bool Move) {bMovingClip = Move;}
+   
+   bool bClipIsFull();
 };
 
 
@@ -151,10 +153,15 @@ void AWeapon::DecrmentAmmo()
     }
 }
 
-void AWeapon::ReloadAmmo() 
+void AWeapon::ReloadAmmo(int32 Amount) 
 {
    CheckF(Ammo + Amount <= MagazineCapacity, TEXT("Attempted To Reload More Than Magazine Capacity!"))
        Ammo += Amount;
+}
+
+bool AWeapon::ClipIsFull() 
+{
+   return Ammo >= MagazineCapacity;
 }
 
 
