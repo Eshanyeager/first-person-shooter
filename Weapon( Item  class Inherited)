@@ -76,7 +76,7 @@ public:
    void ReloadAmmo(int32 Amount);
    ForceInline void SetMovingClip(bool Move) {bMovingClip = Move;}
    
-   bool bClipIsFull();
+   bool ClipIsFull();
 };
 
 
