@@ -15,10 +15,16 @@ class Shooter_API UShooterAnimInstance : public UAnimInstance
 };
 
 public:
+   UShooterAnimInstance();
+ 
    UFunction(BluePrintCallable)
    Void UpdateAnimationProperties(float DeltaTime) ;
    
    Virtual Void NativeInitializeAnimation() ;
+   
+protected:  
+    // Handles Turn in place variables
+    void TurnInPlace();
 
 private:
     UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true)) 
@@ -38,14 +44,23 @@ private:
     
     // OffsetYaw for Stafing
     UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true))
-    float MovementoffsetYaw;
+    float MovementOffsetYaw;
     
     // OffsetYaw for the frame before we stop moving
     UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true))
-    float LastMovementoffsetYaw;
+    float LastMovementOffsetYaw;
     
     UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true))
     bool bAiming;
+    
+    // Yaw of the character this frame
+    float CharacterYaw;
+    
+    // Yaw of character for previous frame
+    float CharacterYawLastFrame;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Turn in place", meta = (AllowPrivateAccess = "true")) 
+    float RootYawOffset;
      
      
      
@@ -58,6 +73,19 @@ private:
  #include "shooterAnimInstance.h"
  #include "GameFrameWork/CharacterMovementComponent.h"
  
+ UShooterAnimInstance::UShooterAnimInstance():
+ Speed(0.f), 
+ bIsInAir(false), 
+ bIsAccelerating(false), 
+ MovementOffsetYaw(0.f), 
+ LastMovementOffsetYaw(0.f),
+ bAiming(false), 
+ CharacterYaw(0.f), 
+ CharacterYawLastFrame(0.f), 
+ RootYawOffset(0.f)
+ {
+ 
+ }
  
  void UShootetAnimInstance::UpdateAnimationProperties(float DeltaTime)
  {
@@ -104,14 +132,37 @@ private:
         }
         bAiming = ShooterCharacter->GetAiming();
     }
+    TurnInPlace();
  
  }
 
  
  void UShooterAnimInstance::NativeInitializeAnimation() 
  {
-  ShooterCharacter = cast<AShooterCharacter>(TryGetPawnOwner());
+      ShooterCharacter = cast<AShooterCharacter>(TryGetPawnOwner());
  }
+ 
+ void UShooterAnimInstance::TurnInPlace() 
+ {
+      if(ShooterCharacter == nullptr) return;
+      
+      if(Speed > 0) 
+      {
+          //Don't Turn In Place, Character is moving
+          
+      }
+      else
+      {  
+          LastCharacterOffsetYaw = CharacterOffsetYaw;
+          CharacterOffsetYaw = ShooterCharacter->GetActorRotation().Yaw;
+          const float DeltaYaw {CharacterOffsetYaw - LastCharacterOffsetYaw};
+          
+          RootYawOffset -= DeltaYaw;
+      }
+ }
+ 
+ 
+ 
 
 
 
