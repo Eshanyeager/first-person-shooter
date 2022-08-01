@@ -66,6 +66,11 @@ private:
     float RotationCurve;
     // Rotation Curve Value previous frame
     float RotationCurveLastFrame;
+    
+    
+    float Pitch;
+    
+    bool bReloading;
      
      
      
@@ -87,7 +92,9 @@ private:
  bAiming(false), 
  CharacterYaw(0.f), 
  CharacterYawLastFrame(0.f), 
- RootYawOffset(0.f)
+ RootYawOffset(0.f), 
+ Pitch(0.f), 
+ bReloading(false)
  {
  
  }
@@ -102,6 +109,8 @@ private:
    
     if(ShooterCharacter) 
     {
+       
+       
        /* get speed of the character from velocity */
        FVector Velocity {ShooterCharacter->GetVelocity()};
        Velocity.z = 0;
@@ -150,6 +159,7 @@ private:
  void UShooterAnimInstance::TurnInPlace() 
  {
       if(ShooterCharacter == nullptr) return;
+      Pitch = ShooterCharacter->GetBaseAimRotation().pitch;
       
       if(Speed > 0) 
       {
