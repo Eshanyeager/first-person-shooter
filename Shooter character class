@@ -460,7 +460,7 @@ void AShooterCharacer::EquipWeapon(AWeapon* WeaponToEquip)
      
          // Get The Hand socket
          const USkeletalMeshSocket* HandSocket = GetMesh()->GetSocketByName(
-         FName("RighHandSocket));
+         FName("RighHandSocket"));
          if(HandSocket) 
              {
              // Attach weapon to the hand
@@ -493,7 +493,7 @@ void AShooterCharacter::ReloadWeapon()
     if(CombatState != ECombatState::ECS_Unoccupied) return;
     if(EquippedWeapon == nullptr) return;
     
-    if(CarryingAmmo())
+    if(CarryingAmmo() && !EquippedWeapon->ClipIsFull)
     {
         CombatState = ECombatState::ECS_Reloading;
         UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
