@@ -200,7 +200,7 @@ private:
       if(ShooterCharacter == nullptr) return;
       Pitch = ShooterCharacter->GetBaseAimRotation().pitch;
       
-      if(Speed > 0) 
+      if(Speed > 0 || bIsInAir) 
       {
           //Don't Turn In Place, Character is moving
           TIPRootYawOffset = 0.f;
