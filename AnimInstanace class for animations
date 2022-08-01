@@ -154,6 +154,11 @@ private:
       if(Speed > 0) 
       {
           //Don't Turn In Place, Character is moving
+          RootYawOffset = 0.f;
+          CharacterOffsetYaw = ShooterCharacter->GetActorRotation().Yaw;
+          CharacterOffsetYawLastFrame = 0.f;
+          RotationCurve = 0.f;
+          RotationCurveLastFrame = 0.f;
           
       }
       else
