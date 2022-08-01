@@ -35,6 +35,9 @@ public:
 protected:  
     // Handles Turn in place variables
     void TurnInPlace();
+    
+    // Handles Calculations for lean
+    void Lean(float DeltaTime);
 
 private:
     UProperty(VisibleAnywhere, BlueprintReadOnly, Categoy = "Movement", meta =(AllowPrivateAccess = true)) 
@@ -94,6 +97,9 @@ private:
     
     // character yaw previous frame
     float CharacterYawLastFrame;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lean", meta = (AllowPrivateAccess = "true"))
+    float YawDelta;
      
      
 
@@ -214,10 +220,10 @@ private:
       {  
           TIPCharacterOffsetYawLastFrame = TIPCharacterOffsetYaw;
           TIPCharacterOffsetYaw = ShooterCharacter->GetActorRotation().Yaw;
-          const float DeltaYaw {TIPCharacterOffsetYaw - TIPCharacterOffsetYawLastFrame};
+          const float TIPYawDelta {TIPCharacterOffsetYaw - TIPCharacterOffsetYawLastFrame};
           
           //Root Yaw offset, updated and clamped to 180,-180
-          RootYawOffset = UKismetMathLibrary::NormalizeAxis(RootYawOffset - DeltaYaw);       
+          RootYawOffset = UKismetMathLibrary::NormalizeAxis(RootYawOffset - TIPYawDelta);       
       }
       const float Turning{ GetCurveValue(TEXT("Turning")) };
       if(Turning > 0 ) 
@@ -239,7 +245,17 @@ private:
       
  }
  
- 
+ void UShooterAnimInstance::Lean(float DeltaTime) 
+ {
+     if(ShooterCharacter == nullptr) return;
+     
+     CharacterYawLastFrame = CharacterYaw;
+     CharacterYaw = ShooterCharacter->GetBaseAimRotation().Yaw;
+      
+     const float Target{ CharacterYaw - CharacterYawLastFrame/DeltaTime};
+     const float Interp{ FMath::FInterpTo(YawDelta, Target, DeltaTime, 6.f) };
+     YawDelta = FMath::Clamp(Interp, -90.f, 90.f); 
+ }
  
 
 
