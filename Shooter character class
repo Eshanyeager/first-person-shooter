@@ -121,6 +121,8 @@ protected:
     // Release the clip while done reloading
     void ReleaseClip();
     
+    void CrouchingButtonPressed();
+    
 
 public:
     // Called every frame
@@ -258,6 +260,10 @@ private:
     // Scene component attach to character during reload
     USceneComponent* HandSceneComponent;
     
+    // true when crouching
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowsPrivateAccess = "true")) 
+    bool bCrouching;
+    
 Public:
     //returns CameraBoom subobject
     ForceInline USpringArmComponent* GetCameraBoom() const {return CameraBoom;}
@@ -279,7 +285,9 @@ Public:
     
     void GetPickupItem(AItem* Item);
     
-    ForceInline GetCombatState() const{return CombatState;}
+    ForceInline ECombatState GetCombatState() const{return CombatState;}
+    
+    ForceInline bool GetCrouching() const {return bCrouching;}
 };
 
 
@@ -591,6 +599,8 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     IE_Released, this, &AShooterCharacter::SelectButtonReleased);
     PlayerInputComponent->BindAction("Reload Button"), IE_Pressed, this, 
     &AShooterCharacter::ReloadButtonPressed);
+    PlayerInputComponent->BindAction("CrouchButton"),
+    IE-Pressed, this, &AShooterCharafter::CrouchButtonPressed);
 }
 
 void AShooterCharacter::MoveForward(float Value)
@@ -1006,6 +1016,14 @@ void AShooterCharacter::GrabClip()
 void AShooterCharacter::ReleaseClip()
 {
    EquippedWeapon->SetMovingClip(false);
+}
+
+void AShooterCharacter::CrouchButtonPressed() 
+{
+   if(!GetCharacterMovement()->IsFalling) 
+   {
+      bCrouching = !bCrouching;
+   }
 }
 
 
