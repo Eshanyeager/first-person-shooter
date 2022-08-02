@@ -121,7 +121,7 @@ protected:
     // Release the clip while done reloading
     void ReleaseClip();
     
-    void CrouchingButtonPressed();
+    void CrouchButtonPressed();
     
 
 public:
