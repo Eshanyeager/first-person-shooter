@@ -100,6 +100,9 @@ private:
     
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lean", meta = (AllowPrivateAccess = "true"))
     float YawDelta;
+    
+    // true when crouching
+    bool,bCrouching;
      
      
 
@@ -125,7 +128,8 @@ private:
  YawDelta(0.f), 
  RootYawOffset(0.f), 
  Pitch(0.f), 
- bReloading(false)
+ bReloading(false), 
+ bCrouching(false) 
  {
  
  }
@@ -140,6 +144,7 @@ private:
    
     if(ShooterCharacter) 
     {
+       bCrouching = ShooterCharacter->GetCrouching();
        bReloading = ShooterCharacter->GetCombatState() == ECombatState::ECS_Reloading;
        
        /* get speed of the character from velocity */
