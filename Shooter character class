@@ -123,6 +123,8 @@ protected:
     
     void CrouchButtonPressed();
     
+    virtual void Jump() override;
+    
 
 public:
     // Called every frame
@@ -264,6 +266,12 @@ private:
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowsPrivateAccess = "true")) 
     bool bCrouching;
     
+    // For base walking speed
+    float BaseMovementSpeed;
+    
+    // For crouching walk speed
+    float CrouchWalkingSpeed;
+    
 Public:
     //returns CameraBoom subobject
     ForceInline USpringArmComponent* GetCameraBoom() const {return CameraBoom;}
@@ -343,7 +351,9 @@ Starting9mmAmmo(85),
 StartingARAmmo(100),
 // Variables for combat state
 CombatState(ECombatState_Unoccupied), 
-bCrouching(false)
+bCrouching(false), 
+BaseMovementSpeed(650.f),
+CrouchWalkingSpeed(300.f)
 {
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
@@ -390,6 +400,8 @@ void AShooterCharacter::BeginPlay()
       EquipWeapon(SpawnDefaultWeapon());
       
       InitializeAmmoMap();
+      
+      GetCharacterMovement()->MaxWalkSpeed = BaseMovementSpeed;
     }
     
 }
@@ -587,7 +599,7 @@ void AShooterCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCo
     // Set up "movement" bindings.
     PlayerInputComponent->BindAxis("MoveForward", this, &AShooterCharacter::MoveForward);
     PlayerInputComponent->BindAxis("MoveRight", this, &AShooterCharacter::MoveRight);
-    PlayerInputComponent->BindAction("Jump") , IE-Pressed, this, &ACharacter::Jump) ;
+    PlayerInputComponent->BindAction("Jump") , IE-Pressed, this, &AShooterCharacter::Jump) ;
     PlayerInputComponent->BindAction("Jump") , IE_Released, this, &ACharacter::StopJumping) ;
     PlayerInputComponent->BindAction("FireButton") , IE_Pressed, this, &AShooterCharacter::FireButtonPressed);
     PlayerInputComponent->BindAction("FireButton") , IE_Released, this, &AShooterCharacter::FireButtonReleased);
@@ -1024,6 +1036,27 @@ void AShooterCharacter::CrouchButtonPressed()
    {
       bCrouching = !bCrouching;
    }
+   if(bCrouching)
+   {
+      GetCharacterMovement()->MaxWalkSpeed = CrouchWalkingSpeed;
+   }
+   else
+   {
+      GetCharacterMovement()->MaxWalkSpeed = BaseMovementSpeed;
+   }
+}
+
+void AShooterCharacter::Jump() 
+{
+   if(bCrouching)
+   {
+      bCrouching = false;
+      GetCharacterMovement()->MaxWalkSpeed = BaseMovementSpeed;
+   }
+   else
+   {
+      ACharacter::Jump;
+   }  
 }
 
 
