@@ -343,7 +343,7 @@ Starting9mmAmmo(85),
 StartingARAmmo(100),
 // Variables for combat state
 CombatState(ECombatState_Unoccupied), 
-
+bCrouching(false)
 {
     // Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
     PrimaryActorTick.bCanEverTick = true;
@@ -1020,7 +1020,7 @@ void AShooterCharacter::ReleaseClip()
 
 void AShooterCharacter::CrouchButtonPressed() 
 {
-   if(!GetCharacterMovement()->IsFalling) 
+   if(!GetCharacterMovement()->IsFalling()) 
    {
       bCrouching = !bCrouching;
    }
