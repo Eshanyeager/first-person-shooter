@@ -98,10 +98,11 @@ private:
     // character yaw previous frame
     FRotator CharacterRotationLastFrame;
     
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Lean", meta = (AllowPrivateAccess = "true"))
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Lean", meta = (AllowPrivateAccess = "true"))
     float YawDelta;
     
     // true when crouching
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess = "true"))
     bool,bCrouching;
      
      
