@@ -125,7 +125,11 @@ protected:
     
     virtual void Jump() override;
     
+    // Interp for calsule half height
     void InterpCapsuleHalfHeight(float DeltaTime);
+    
+    void Aim();
+    Void AimingStop();
     
 
 public:
@@ -286,6 +290,8 @@ private:
     float BaseGoundFriction
     UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Friction", meta =(AllowsPrivateAccess = "true")) 
     float CrouchingGroundFriction;
+    
+    bool bAimingButtonPressed;
     
 Public:
     //returns CameraBoom subobject
@@ -534,6 +540,10 @@ void AShooterCharacter::ReloadWeapon()
     
     if(CarryingAmmo() && !EquippedWeapon->ClipIsFull)
     {
+        if(bAiming) 
+        {
+           AimingStop();
+        }
         CombatState = ECombatState::ECS_Reloading;
         UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
         if(AnimInstance && ReloadMontage) 
@@ -559,11 +569,14 @@ void AShooterCharacter::FinishReloading()
 {
    // Update Combat state
    CombatState = ECombatState::ECS_Unoccupied;
+   if(bAimingButtonPressed)
+   {
+       Aim();
+   }
    
    if(EquippedWeapon == nullptr) return;
    
    const auto AmmoType{ EquippedWeapon->GetAmmoType() };
-   
    //Update the ammo map
    if(AmmoMap.Contains[AmmoType]) 
    {
@@ -594,6 +607,21 @@ void AShooterCharacter::FinishReloading()
    }
 }
 
+void AShooterCharacter::Aim() 
+{
+   bAiming = true;
+   GetCharacterMovement()->MaxWalkSpeed = CrouchMovementSpeed;
+}
+
+void ASHOOTERCHARACTER::AimingStop() 
+{
+   bAiming = false;
+   if(!bCrouching) 
+   {
+      GetCharacterMovement()->MaxWalkSpeed = BaseMovementSpeed;
+   }
+}
+
 // Called every frame
 void AShooterCharacter::Tick( float DeltaTime )
 {
@@ -606,6 +634,8 @@ void AShooterCharacter::Tick( float DeltaTime )
     CalculateCrosshairSpread(DeltaTime) ;
     // Check Overlapped Then Trace For items
     TraceForItems();
+    // Interp for capsule half height
+    InterpCapsuleHalfHeight(float DeltaTime);
     
 }
 
@@ -785,11 +815,16 @@ Void AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, 
                  
 void AShooterCharacter::AimingbuttonPressed() 
 { 
-      bAiming = true;     
+      bAimingButtonPressed = true;
+      if(CombatState != ECombatState::ECS_Reloading)
+      {
+         Aim();
+      }
 }
 void AShooterCharacter::AimingbuttonReleased() 
 { 
-      bAiming = false;    
+      bAimingButtonPressed = false;
+      AimingStop();
 }
 
 void AShooterCharacter::GetCrosshairSpreadMultiplier() const
@@ -1099,9 +1134,7 @@ void AShooterCharacter::InterpCapsuleHalfHeight(float DeltaTime)
    const FVector MeshOffset{ 0.f,0.f,-DeltaCapsuleHalfHeight };
    GetMesh()->AddLocalOffset(MeshOffset);
    
-   GetCapsuleComponent()->SetCapsuleHalfHeight(InterpHalfHeight);
-   
-   
+   GetCapsuleComponent()->SetCapsuleHalfHeight(InterpHalfHeight);     
 }
 
 
