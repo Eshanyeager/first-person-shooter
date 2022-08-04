@@ -90,8 +90,7 @@ void AAmmo::SetItemProperties(EItemState Item)
        
      
        case EItemState::Equipped:
-      
-       PickupWidget->SetVisibiilty(false); 
+     
        //Set Item properties
        AmmoMesh->SetSimulatePhysics(false) ;
        AmmoMesh->SetEnableGravity(false);
