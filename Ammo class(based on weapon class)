@@ -1,0 +1,85 @@
+         /********** Header file *********/
+
+#pragma once
+
+
+#include "CoreMinimal.h"
+#include "Item.h"
+#include "Ammo.generated.h"
+
+
+UCLASS() 
+class SHOOTER_API AAmmo : public AItem
+{
+    GENERATED_BODY()
+    
+public:
+    AAmmo();
+    
+    virtual void Tick(float DeltaTime) override;
+
+protected:
+    virtual void BeginPlay() override;
+
+private:
+    //  mesh for pickup ammo
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Ammo, meta = (AllowPrivateAccess = "true")) 
+    UStaticMeshComponent* AmmoMesh();
+  
+public:
+   ForceInline UStaticMeshComponent* GetAmmoMesh() const {return AmmoMesh;}
+
+};
+
+
+
+
+
+         /******* Cpp ********/
+         
+#include "AAmmo.h"
+#include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
+#include "Components/SphereComponent.h"
+
+
+AAmmo::AAmmo() :
+
+{
+    // Construct ammo mesh and setit tothe root comp
+    AmmoMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Ammo Mesh"));
+    SetupAttachment(RootComponent);
+    
+    GetCollisionBox->SetupAttachment(GetRootComponent());
+    GetAreaSphere->SetupAttachment(GetRootComponent());
+    GetPickupWidget->SetupAttqchment(GetRootComponent());
+    
+}
+
+void AAmmo::Tick(float DeltaTime)
+{
+   Super::Tick(DeltaTime);
+   
+}
+
+void AAmmo::BeginPlay() 
+{
+   Super::BeginPlay();
+   
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
