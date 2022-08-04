@@ -5,6 +5,7 @@
 
 #include "CoreMinimal.h"
 #include "Item.h"
+#include "AmmoType.h"
 #include "Ammo.generated.h"
 
 
@@ -28,9 +29,13 @@ private:
     //  mesh for pickup ammo
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Ammo, meta = (AllowPrivateAccess = "true")) 
     UStaticMeshComponent* AmmoMesh();
+    
+    // Ammo type for ammo
+    EAmmoType AmmoType;
   
 public:
    ForceInline UStaticMeshComponent* GetAmmoMesh() const {return AmmoMesh;}
+   ForceInline EAmmoType GetAmmoType() comst {return AmmoType;} 
 
 };
 
