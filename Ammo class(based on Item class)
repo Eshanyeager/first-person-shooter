@@ -24,14 +24,29 @@ protected:
     
     // Overriding the Set item properties to set the ammo mesh properties
     virtual void SetItemProperties(EItemState State) override;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Sphere, meta = (AllowsPrivateAccess = "true")) 
+    void AmmoSphereOverLap(UPrimitiveComponent* OverLappedComponent, 
+    AActor* OtherActor, 
+    UPrimitiveComponent* OtherComp, 
+    int32 OtherBodyIndex, 
+    bool bFromSweep, 
+    FHitResult& SweepResult); 
 
 private:
     //  mesh for pickup ammo
     UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Ammo, meta = (AllowPrivateAccess = "true")) 
     UStaticMeshComponent* AmmoMesh();
     
+    //Overlap shpere for pickingup ammo
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Sphere, meta = (AllowsPrivateAccess = "true")) 
+    class USphereComponent* AmmoCollisionShpere;
+    
     // Ammo type for ammo
     EAmmoType AmmoType;
+    
+    // Texture icon for ammowidget
+    UTexture2D* AmmoTexture;
   
 public:
    ForceInline UStaticMeshComponent* GetAmmoMesh() const {return AmmoMesh;}
@@ -62,6 +77,9 @@ AAmmo::AAmmo() :
     GetAreaSphere->SetupAttachment(GetRootComponent());
     GetPickupWidget->SetupAttqchment(GetRootComponent());
     
+    AmmoCollisionSphere = CreateDefaultSubobject<USphereComponent>(TEXT("Ammo Sphere"));
+    AmmoCollisionSphere->SetupAttachment(GetRootComponent);
+    AmmoCollisionSphere->SetSphereRadius(50.f);
 }
 
 void AAmmo::Tick(float DeltaTime)
@@ -73,6 +91,8 @@ void AAmmo::Tick(float DeltaTime)
 void AAmmo::BeginPlay() 
 {
    Super::BeginPlay();
+   
+   AmmoCollisionSphere->OnComponentBeginOverlap.AddDynamic(this, &Ammo::AmmoSphereOverlap) ;
    
 }
 
@@ -130,6 +150,24 @@ void AAmmo::SetItemProperties(EItemState Item)
        AmmoMesh->SetCollisionEnabled(
        ECollisionEnabled::NoCollision) ;
 }
+
+void AAmmo::AmmoSphereOverLap(UPrimitiveComponent* OverLappedComponent, 
+    AActor* OtherActor, 
+    UPrimitiveComponent* OtherComp, 
+    int32 OtherBodyIndex, 
+    bool bFromSweep, 
+    FHitResult& SweepResult)
+    {
+       if(OtherActor) 
+       {
+          auto OverlapCharacter = Cast<AShooterCharacter>(OtherActor);
+          if(OverlapCharacter) 
+          {  
+             StartItemCurve(OverlapCharacter);
+             AmmoCollisionSphere->SetCollisionEnable(ECollisionEnable::NoCollision) ;
+          }
+       }
+    }
 
 
 
