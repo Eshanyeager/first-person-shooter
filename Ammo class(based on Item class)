@@ -75,6 +75,56 @@ void AAmmo::SetItemProperties(EItemState Item)
 { 
    Super::SetItemProperties(State);
    
+   switch(State)
+     {
+       case EItemState::EIS_Pickup:
+       
+       //Set Item properties
+       AmmoMesh->SetSimulatePhysics(false) ;
+       AmmoMesh->SetEnableGravity(false);
+       AmmoMesh->SetVisibility(true) ;
+       AmmoMesh->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore);
+       AmmoMesh->SetCollisionEnabled(
+       EcollisionEnabled::NoCollision);
+       
+     
+       case EItemState::Equipped:
+      
+       PickupWidget->SetVisibiilty(false); 
+       //Set Item properties
+       AmmoMesh->SetSimulatePhysics(false) ;
+       AmmoMesh->SetEnableGravity(false);
+       AmmoMesh->SetVisibility(true) ;
+       AmmoMesh->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore);
+       AmmoMesh->SetCollisionEnabled(
+       EcollisionEnabled::NoCollision);
+       
+       
+       // Weapon falling state 
+       case EItemState::EIS_Falling:
+       
+       AmmoMesh->SetSimulatePhysics(true);
+       AmmoMesh->SetEnableGravity(true) ;
+       AmmoMesh->SetCollisionEnabled(ECollisionEnabled::QueryAndPhysicsOnly) ;
+       AmmoMesh->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore) ;
+       AmmoMesh->SetCollisionResponseToChannel(
+       ECollisionChannel::ECC_WorldStatic, 
+       ECollisionResponse::ECR_Block) ;
+    
+       
+       case EItemState::EIS_EquipInterping:
+       
+       // Set item mesh priperties
+       AmmoMesh->SetSimulatePhysics(false);
+       AmmoMesh->SetEnableGravity(false) ;
+       AmmoMesh->SetVisibility(true) ;
+       AmmoMesh->SetCollisionResponseToAllChannels(
+       ECollisionResponse::ECR_Ignore) ;
+       AmmoMesh->SetCollisionEnabled(
+       ECollisionEnabled::NoCollision) ;
 }
 
 
