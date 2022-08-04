@@ -162,6 +162,7 @@ public:
       ForceInline UBoxComponent* GetCollisionBox() const {return CollisionBox:}
       ForrceInline EItemState GetItemState() const {return ItemState;}
       void SetItemState(EItemState State);
+      ForceInline int32 GetItemCount() const {return ItemCount;}
       ForceInline USkeletalMeshComponent* GetItemMesh() const {return ItemMesh;}
       void StartItemCurve(AShooterCharacter* Char) ;
       ForceInline GetPickupSound() const {return PickupSound;}
@@ -178,6 +179,7 @@ public:
 #include "Item.h"
 #include "Components/BoxComponent.h"
 #include "Components/WidgetComponent.h"
+#include "Sounds/SoundCue" 
 #include "Components/ShpereComponentComponent.h"
 #include "ShooterCharacter.h"
 
@@ -441,6 +443,11 @@ void AItem::StartItemCurve(AShooterCharacter* Char)
 {
    // Store A handle to the character
    Character = Char;
+   
+   if(PickupSound) 
+   {
+      UGamePlayStatics::PlaySound2D(this, PickupSound) ;
+   }
    
    ItemInterpStartLocation = GetActorLocation() ;
    bInterping = true;
