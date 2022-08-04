@@ -44,6 +44,10 @@ protected:
    //Called when the game starts or when spawned
    virtual void BeginPlay() override;
    
+   // Set Item Properties based on state
+    UProperty(EditAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true"))
+    virtual void SetItemProperties(EItemState State);
+   
    // Called When Overlaped Area
    UFUNCTION() 
    void OnSphereOverlap(UPrimitiveComponent* OverlappedComponent, 
@@ -106,9 +110,6 @@ private:
        // State of the Item
       UProperty(EidtAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true")) 
       EItemState ItemState;
-      // Set Item Properties based on state
-      UProperty(EditAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true"))
-      void SetItemProperties(EItemState State);
       
       // The Curve Asset to use when interping
       UProperty(EditAnywhere, BlueprintReadOnly, Category = " Item", meta = (AllowPrivateAccess = "true"))
