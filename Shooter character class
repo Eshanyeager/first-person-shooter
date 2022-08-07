@@ -67,7 +67,7 @@ protected:
  
     void AutoFireReset();
     
-    bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation) ;
+    bool GetBeamEndLocation(const FVector& MuzzleSocketLocation, FHitResult& OutHitResult) ;
     
     // Trace Item Under Crosshair
     bool TraceUnderCrosshair(FHitResult& OutHitResult, FVector& OutHitLocation);
@@ -734,21 +734,35 @@ void AShooterCharacter::SendBullets()
        UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), MuzzleFlash, SocketTransform);
      }
      
-     FVector BeamEnd;
-     bool bBeamEnd = GetBeamEndLocation(SocketTransform.Location(), BeamEnd);
+     FHitResult BeamHitResult;
+     bool bBeamEnd = GetBeamEndLocation(SocketTransform.Location(), BeamHitResult);
      if(bBeamEnd) 
      {
-     // Spawn Impact Particles after updating beam end poin
-       UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), Impactparticles, BeamEnd) 
-     }
      
-     UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BeamParticles, SocketTransform);
-     if(Beam) 
-     {
-       Beam->SetVectorParameter(FName("Target"), BeamEnd); 
-     } 
-     // Start Bullet Fire Timer For Crosshair 
-     StartCrosshairBulletFire() ;
+        if(BeamHitResult.Actor.IsValid()) 
+        {
+           // Does hit actor implement bullethitinterface
+           IBulletHitInterface* BulletHitInterface = Cast<IBulletHitInterface>(BeamHitResult.Actor.Get());
+           if(BulletHitInterface) 
+           {
+              BulletHitInterface->BulletHit_Implementation(BeamHitResult);
+           }
+        }
+        if(ImpactParticles) 
+        {
+           // Spawn Impact Particles after updating beam end poin
+           UGameplayStatics::SpawnEmitterAtLocation(
+           GetWorld(), Impactparticles, BeamHitResult)
+        } 
+     
+        UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BeamParticles, SocketTransform);
+        if(Beam) 
+        {
+           Beam->SetVectorParameter(FName("Target"), BeamHitResult.Location); 
+        } 
+        // Start Bullet Fire Timer For Crosshair 
+        StartCrosshairBulletFire() ;
+     }
 }
 
 void AShooterCharacter::PlayGunFireMontage()
@@ -803,8 +817,9 @@ void AShooterCharacter::SwapWeapon(AWeapon* WeaponToSwap)
 }
 
 
-Void AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, FVector& OutBeamLocation);
+Void AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, FHitResult& OutHitResult);
 {
+     FVector OutBeamLocation
      // Check for Crosshair hit trace
      FHitResult CrosshairHitResult;
      bool bCrosshairHit = TraceUnderCrosshair(CrosshairHitResult, OutBeamLocation) ;
@@ -818,24 +833,23 @@ Void AShooterCharacter::GetBeamEndLocation(const FVector& MuzzleSocketLocation, 
        // OutBeamLocation is the end Location for the line trace
      }
      
-     // Perform a second trace this time from gun barrel
-     FHitResult WeaponTraceHit;
+         // Perform a second trace this time from gun barrel
          const FVECTOR WeaponTraceStart{ MuzzleSocketLocation};
          const FVector StartToEnd { OutBeamLocation - MuzzleSocketLocation };
          const FVector WeaponTraceEnd{ MuzzleSocketLocation + StartToEnd * 1.25f};
          
          GetWorld()->LineTraceSingleByChannel(
-         WeaponTraceHit, 
+         OutHitResult, 
          WeaponTraceStart, 
          WeaponTraceEnd, 
          ECollisionChannel::ECC_Visibility) ;
       
-         if(WeaponTraceHit.bBlockingHit)
+         if(!OutHitResult.bBlockingHit) // Object Between Barrel and BeamEndPoint?
          {
-          OutBeamLocation = WeaponTraceHit.Location; // Object Between Barrel and BeamEndPoint?
-          return true;
+           OutHitResult.Location = OutBeamLocation; 
+          return false;
          }     
-   return false;             
+   return true;             
 }
                  
 void AShooterCharacter::AimingbuttonPressed() 
