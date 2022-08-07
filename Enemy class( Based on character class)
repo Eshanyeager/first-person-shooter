@@ -1,0 +1,92 @@
+     /****** header *****/
+
+
+# pragma once
+
+
+
+#include "CoreMinimal.h"
+#include "GameFrameWork/Character.h"
+#include "Enemy.generated.h"
+
+
+UCLASS() 
+Class Shooter_API AEnemy : public ACharacter
+{
+   GENERATED_BODY() 
+   
+public:
+   // Set default values for this character's properties
+   AEnemy();
+   
+protected:
+   // Called when game starts or when spawned
+   virtual void BegingPlay() override;
+   
+   // Spawn Impact particles when hit by bullet
+   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta =(AllowPrivateAccess = "true")) 
+   class UParticleSystem* ImpactParticles;
+   
+   // Sound to when hit by bullet
+   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta =(AllowPrivateAccess = "true")) 
+   class USoundCue ImpactSound;
+   
+public:
+   // Called every frame
+   virtual void Tick(float DeltaTime) override;
+   
+   // Called to bind functionality to input
+   virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
+   
+};
+
+
+
+
+       /****** Cpp *******/
+       
+       
+#include "Enemy.h"
+
+
+// Sets default value
+AEnemy::AEnemy()
+{
+   // Set this character to call tick() every frame. you can turn this off to improve performance
+   PrimaryActorTick.bCanEverTick = true;
+   
+   GetMesh()->SetCollisionResponseToChannel(
+   ECollisionChannel::ECC_Visiblity, 
+   ECollisionChannel::ECR_Block);
+   
+}
+
+// Called this when the game starts or when spawned
+AEnemy::BeginPlay() 
+{
+   Super::BeginPlay();
+}
+
+// Called every frame
+AEnemy::Tick(float DeltaTime) 
+{
+   Super::Tick(DeltaTime);
+}
+
+// Called to bind functionality to input
+AEnemy::SetupPlayerInputComponent(UPlayerInputComponent* PlayerInputComponent) 
+{
+   Super::SetupPlayerInputComponent(PlayerInputComponent);
+}
+
+
+
+
+
+
+
+
+
+
+
+
