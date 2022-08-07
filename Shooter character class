@@ -740,24 +740,25 @@ void AShooterCharacter::SendBullets()
      if(bBeamEnd) 
      {
      
-        if(BeamHitResult.Actor.IsValid()) 
-        {
+         if(BeamHitResult.Actor.IsValid()) 
+         {
            // Does hit actor implement bullethitinterface
            IBulletHitInterface* BulletHitInterface = Cast<IBulletHitInterface>(BeamHitResult.Actor.Get());
            if(BulletHitInterface) 
            {
               BulletHitInterface->BulletHit_Implementation(BeamHitResult);
            }
-           else
+         }
+         else
+         {
+           if(ImpactParticles) 
            {
-              if(ImpactParticles) 
-              {
-                 // Spawn Impact Particles after updating beam end poin
-                 UGameplayStatics::SpawnEmitterAtLocation(
-                 GetWorld(), Impactparticles, BeamHitResult)
-              } 
-           }
-        }
+             // Spawn Impact Particles after updating beam end poin
+             UGameplayStatics::SpawnEmitterAtLocation(
+             GetWorld(), Impactparticles, BeamHitResult)
+           } 
+         }
+      }
      
         UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BeamParticles, SocketTransform);
         if(Beam) 
