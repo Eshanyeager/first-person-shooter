@@ -7,11 +7,12 @@
 
 #include "CoreMinimal.h"
 #include "GameFrameWork/Character.h"
+#include "BulletHitInterface.h"
 #include "Enemy.generated.h"
 
 
 UCLASS() 
-Class Shooter_API AEnemy : public ACharacter
+Class Shooter_API AEnemy : public ACharacter, public IBulletHitInterface
 {
    GENERATED_BODY() 
    
@@ -38,6 +39,7 @@ public:
    // Called to bind functionality to input
    virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
    
+   virtual void BulletHit_Implementation(FHitResult HitResult) override;
 };
 
 
