@@ -49,6 +49,9 @@ public:
        
        
 #include "Enemy.h"
+#include "Kismet/GameplayStatics.h"
+#include "Sound/SoundCue.h"
+#include "Particles/ParticleSystem.h"
 
 
 // Sets default value
@@ -81,6 +84,18 @@ AEnemy::SetupPlayerInputComponent(UPlayerInputComponent* PlayerInputComponent)
    Super::SetupPlayerInputComponent(PlayerInputComponent);
 }
 
+AEnemy::BulletHit_Implementation(FHitResult HitResult)
+{
+   if(ImpactSound) 
+   {
+     UGameplayStatics::PlaySound2D(this, ImpactSound, GetActorLocation());
+   }
+   
+   if(ImpactParticles)
+   {
+     UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, HitResult.Location, FRotator(0.f), true);
+   }
+}
 
 
 
