@@ -337,6 +337,7 @@ Public:
 #include "Engine/SkeletalMeshSocket.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Item.h"
+#include "BulletHitInterface.h"
 #include "Components/BoxComponent.h"
 #include "Components/ShpereComponent.h"
 
@@ -747,13 +748,16 @@ void AShooterCharacter::SendBullets()
            {
               BulletHitInterface->BulletHit_Implementation(BeamHitResult);
            }
+           else
+           {
+              if(ImpactParticles) 
+              {
+                 // Spawn Impact Particles after updating beam end poin
+                 UGameplayStatics::SpawnEmitterAtLocation(
+                 GetWorld(), Impactparticles, BeamHitResult)
+              } 
+           }
         }
-        if(ImpactParticles) 
-        {
-           // Spawn Impact Particles after updating beam end poin
-           UGameplayStatics::SpawnEmitterAtLocation(
-           GetWorld(), Impactparticles, BeamHitResult)
-        } 
      
         UParticleSystemComponent* Beam = UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), BeamParticles, SocketTransform);
         if(Beam) 
