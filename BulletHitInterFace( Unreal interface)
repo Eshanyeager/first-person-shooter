@@ -1,0 +1,25 @@
+            /******* Header *********/
+            
+#include "BulletHitInterface.generated.h"
+
+// This class does not need to be modified
+UINTERFACE(MinimalAPI) 
+class UBulletHitInterface : public UInterface
+{
+  GENERATED_BODY()
+
+};
+
+
+class Shooter_API IBulletHitInterface
+{
+  GENERATED_BODY()
+  
+  // Add interface function to this class. This is the class that will be inherited to implement this interface.  
+public:
+  
+  UFUNCTION(BlueprintNariveEvent, BlueprintCallable)
+  void BulletHit(FHitResult HitResult); 
+
+
+};
