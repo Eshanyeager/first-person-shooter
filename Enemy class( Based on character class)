@@ -28,6 +28,13 @@ protected:
    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta =(AllowPrivateAccess = "true")) 
    class UParticleSystem* ImpactParticles;
    
+   UFUNCTION(BlueprintNativeEvent) 
+   void ShowHealthBar();
+   void ShowHealthBar_Implementation();
+   
+   UFUNCTION(BlueprintImplementableEvent) 
+   HideHealthBar();
+   
    // Sound to when hit by bullet
    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta =(AllowPrivateAccess = "true")) 
    class USoundCue ImpactSound;
@@ -40,6 +47,11 @@ protected:
    
    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta =(AllowPrivateAccess = "true"))
    FString HeadBone;
+   
+   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta =(AllowPrivateAccess = "true"))
+   float HealthBarDisplayTime;
+   
+   FHitResult HealthBarTimer;
    
 public:
    // Called every frame
@@ -72,7 +84,8 @@ public:
 // Sets default value
 AEnemy::AEnemy():
 Health(100.f),
-MaxHealth(100.f)
+MaxHealth(100.f), 
+HealthBarDisplayTime(4.f)
 {
    // Set this character to call tick() every frame. you can turn this off to improve performance
    PrimaryActorTick.bCanEverTick = true;
@@ -112,6 +125,7 @@ AEnemy::BulletHit_Implementation(FHitResult HitResult)
    {
      UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, HitResult.Location, FRotator(0.f), true);
    }
+   ShowHealthBar();
 }
 
 float AEnemy::TakeDamage(float DamageAmount, 
@@ -128,6 +142,17 @@ AController* EventInstigator, AActor* DamageCauser)
    }
    DamageAmount;
 }
+
+void AEnemy::ShowHealthBar_Implementation()
+{
+   GetWorldTimerManager.ClearTimer(HealthBarTimer) ;
+   GetWorldTimerManager.SetTime(
+   HealthBarTimer, 
+   this, 
+   &AEnemy::HideHealthBar, 
+   HealthBarDisplayTime);
+}
+
 
 
 
