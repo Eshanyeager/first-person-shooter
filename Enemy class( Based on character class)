@@ -74,6 +74,9 @@ private:
    
    bool bCanHitReact;
    
+   UPROPERTY(BlueprintReadWrite, Category = "AI Behavior", meta = (AllowPrivateAccess = "true")) 
+   UBehaviorTree* BehaviorTree;
+   
    
    
 public:
