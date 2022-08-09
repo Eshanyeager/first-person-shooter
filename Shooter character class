@@ -363,8 +363,7 @@ CrosshairShootingFactor(0.f);
 ShootTimeDuration(0.05f), 
 bFiringBullet(false) ;
 // Automatic  Gun Fire Rate
-AutomaticFireRate(0.1f), 
-bShouldFire(true), 
+AutomaticFireRate(0.1f),  
 bFireButtonPressed(false),
 //  Item Trace Variables
 bShouldTraceForItems(false)
@@ -809,7 +808,7 @@ void AShooterCharacter::SelectButtonPressed()
         UGameplayStatics::PlaySound2D(this, TraceHitItem->GetPickUpSound());
      }
 }
-void AShooterCharacter::SelectButtonPressed() 
+void AShooterCharacter::SelectButtonreleased() 
 {
   
 }
@@ -1120,7 +1119,7 @@ void AShooterCharacter::GrabClip()
    if(HandSceneComponent == nullptr) return;
    
    int32 ClipBoneIndex{ EquippedWeapon->GetItemMesh()->GetBoneIndex(EquippedWeapon->GetClipBoneName())};
-   ClipTransform = EquippedWeapon()->GetItemMesh()->GetBoneBoneTransform(ClipBoneIndex);
+   ClipTransform = EquippedWeapon()->GetItemMesh()->GetBoneTransform(ClipBoneIndex);
    
    FAttachmentTransformRules AttachmentRules(EAttachmentRules::KeepRelative, true);
    HandSceneComponent->AttachToComponent(GetMesh(), AttachmentRules, FName("TEXT("Hand_L)));
