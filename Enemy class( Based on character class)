@@ -93,6 +93,7 @@ public:
    AController* EventInstigator, AActor* DamageCauser) override;
    
    FORCEINLINE FString GetHeadBone const { return HeadBone; }
+   FORCEINLINE UBehaviorTree* GetBehaviorTree() const { return BehaviorTree; }
 };
 
 
