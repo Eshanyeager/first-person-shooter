@@ -31,6 +31,7 @@ private:
    
 Public:
    FORCEINLINE UBlackBoardComponent* GetBlackBoardComponent const { return BlackBoardComponent; }
+   FORCEINLINE UBehaviorTreeComponent* GetBehaviorTreeComponent const { return BehaviorTreeComponent; }
 };
        
        
@@ -49,8 +50,8 @@ void AEnemyController::AEnemyController()
     BlackBoareComponent = CreateDefaultSubobject<UBlackBoardComponent>("BlackBoardComp");
     Check(BlackBoardComponent);
     
-    BlackBoareComponent = CreateDefaultSubobject<UBlackBoardComponent>("BlackBoardComp");
-    Check(BlackBoardComponent);
+    BehaviorTreeComponent = CreateDefaultSubobject<UBehaviorTreeComponent>("BehaviorTreeComp");
+    Check(BehaviorTreeComponent);
 }
 
 void AEnemyController::OnPossess(APawn* InPawn) 
