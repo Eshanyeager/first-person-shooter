@@ -35,6 +35,14 @@ protected:
    UFUNCTION(BlueprintImplementableEvent) 
    HideHealthBar();
    
+   void Die();
+   
+   void PlayHitMontage(FName Section, float PlayRate = 1.f);
+   
+   void ResetHitReactTimer();
+   
+private:
+   
    // Sound to when hit by bullet
    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta =(AllowPrivateAccess = "true")) 
    class USoundCue ImpactSound;
@@ -51,7 +59,22 @@ protected:
    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta =(AllowPrivateAccess = "true"))
    float HealthBarDisplayTime;
    
-   FHitResult HealthBarTimer;
+   FTimerHandle HealthBarTimer;
+   
+   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta =(AllowPrivateAccess = "true"))
+   UAnimMontage* HitMontage;
+   
+   FTimerHandle HitReactTimer;
+   
+   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta =(AllowPrivateAccess = "true"))
+   float HitReactMin;
+   
+   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta =(AllowPrivateAccess = "true"))
+   float HitReactMax;
+   
+   bool bCanHitReact;
+   
+   
    
 public:
    // Called every frame
@@ -85,7 +108,10 @@ public:
 AEnemy::AEnemy():
 Health(100.f),
 MaxHealth(100.f), 
-HealthBarDisplayTime(4.f)
+HealthBarDisplayTime(4.f), 
+HitReactMin(.5f),
+HitReactMax(1.f),
+bCanHitReact(true)
 {
    // Set this character to call tick() every frame. you can turn this off to improve performance
    PrimaryActorTick.bCanEverTick = true;
@@ -126,6 +152,7 @@ AEnemy::BulletHit_Implementation(FHitResult HitResult)
      UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, HitResult.Location, FRotator(0.f), true);
    }
    ShowHealthBar();
+   PlayHitMontage(FName("HitReactFront"));
 }
 
 float AEnemy::TakeDamage(float DamageAmount, 
@@ -135,6 +162,7 @@ AController* EventInstigator, AActor* DamageCauser)
    if(Health - DamageAmount <= 0.f)
    {
       Health = 0.f;
+      Die();
    }
    else
    {
@@ -151,6 +179,28 @@ void AEnemy::ShowHealthBar_Implementation()
    this, 
    &AEnemy::HideHealthBar, 
    HealthBarDisplayTime);
+}
+
+void AEnemy::Die() 
+{
+   HideHealthBar();
+}
+
+void AEnemy::PlayHitMontage(FName Section, float PlayRate) 
+{
+  UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+  if(AnimInstance) 
+  {
+     AnimInstance->Montage_Play(HitMontage, PlayRate);
+     AnimInstance->Montage_JumpToSection(Section, HitMontage);
+  }
+  bCanHitReact = false;
+  const float HitReactTime{ FMath::FRandRange(HitReactMin, HitReactMax};
+  GetWorldTimerManager.SetTime(HitReactTimer,
+  this, 
+  &AEnemy::ResetHitReactTimer(), 
+  HitReactTime);
+  
 }
 
 
