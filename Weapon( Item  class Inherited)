@@ -60,6 +60,10 @@ private:
     // Clip bone name
     UPROPERTY(EditAnywhere, BlueprintRradOnly, Category = "Weapon Properties", meta = (AllowPrivateAccess = "true")) 
     FName ClipBoneName;
+    
+    float Damage;
+    
+    float HeadShotDamage;
 
 public:
    
@@ -72,6 +76,8 @@ public:
    ForceInline FName GetReloadMontageSection() const {return ReloadMontageSection;}
    ForceInline int32 GetMagazineCapacity() const {return MagazineCapacity;}
    ForceInline FName GetClipBoneName() const { return ClipBoneName; }
+   ForceInline float GetDamage() const { return Damage; }
+   ForceInline float GetHeadShotDamage() const { return HeadShotDamage; }
    
    void ReloadAmmo(int32 Amount);
    ForceInline void SetMovingClip(bool Move) {bMovingClip = Move;}
