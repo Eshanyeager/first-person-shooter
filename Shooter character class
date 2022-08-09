@@ -337,6 +337,7 @@ Public:
 #include "Engine/SkeletalMeshSocket.h"
 #include "Particles/ParticleSystemComponent.h"
 #include "Item.h"
+#include "Enemy.h"
 #include "BulletHitInterface.h"
 #include "Components/BoxComponent.h"
 #include "Components/ShpereComponent.h"
@@ -746,6 +747,18 @@ void AShooterCharacter::SendBullets()
            if(BulletHitInterface) 
            {
               BulletHitInterface->BulletHit_Implementation(BeamHitResult);
+           }
+           
+           AEnemy* HitEnemy = Cast<AEnemy>(BeamHitResult.Actor.Get());
+           if(HitEnemy) 
+           {
+              UGameplayStatics::ApplyDamage(
+              BeamHitResult.Actor.Get(),
+              EquippedWeapon->GetDamage(), 
+              GetController(), 
+              this, 
+              UDamageType::StaticClass());
+              
            }
          }
          else
