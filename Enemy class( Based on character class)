@@ -77,7 +77,7 @@ private:
    UPROPERTY(BlueprintReadWrite, Category = "AI Behavior", meta = (AllowPrivateAccess = "true")) 
    UBehaviorTree* BehaviorTree;
    
-   UPROPERTY(BlueprintReadWrite, Category = "AI Behavior", meta = (AllowPrivateAccess = "true")) 
+   UPROPERTY(BlueprintReadWrite, Category = "AI Behavior", meta = (AllowPrivateAccess = "true", MakeEditWidget = "true")) 
    FVector PatrolPoint;
    
    // Reference to AI controller
