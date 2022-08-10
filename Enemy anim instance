@@ -1,0 +1,58 @@
+       /****** header *****/
+       
+#include "CoreMinimal.h"
+#include "Animation/AnimInstance.h"
+#include "EnemyAnimInstance.generated.h"
+
+/*
+*
+*/
+UCLASS()
+class SHOOTER_API EnemyAnimInstance : public UAnimInstance
+{
+   GENERATED_BODY()
+   
+ public:
+    void UpdateAnimationProperties(float DeltaTime);
+ 
+ private:
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Movements, meta =(AllowPrivateAccess = "true")) 
+    float Speed;
+    
+    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, meta =(AllowPrivateAccess = "true"))
+    Class AEnemy* Enemy;
+};
+
+
+
+
+         /******* Cpp ********/
+         
+        
+#include "EnemyAnimInstance.h"
+#include "Enemy.h"
+
+
+void UEnemyAnimInstance::UpdateAnimationProperties(float DeltaTime)
+{
+   if(Enemy == nullptr)
+   {
+      Enemy = Cast<AEnemy>(TryGetPawnOwner());
+   }
+   
+   if(Enemy) 
+   {      
+      FVector Velocity { Enemy->GetVelocity(); }
+      Velocity.z = 0.f;
+      Speed = Velocity.Size();
+   }
+}
+
+
+
+
+
+
+
+
+
