@@ -77,7 +77,11 @@ private:
    UPROPERTY(BlueprintReadWrite, Category = "AI Behavior", meta = (AllowPrivateAccess = "true")) 
    UBehaviorTree* BehaviorTree;
    
+   UPROPERTY(BlueprintReadWrite, Category = "AI Behavior", meta = (AllowPrivateAccess = "true")) 
+   FVector PatrolPoint;
    
+   // Reference to AI controller
+   AEnemyController* EnemyController;
    
 public:
    // Called every frame
@@ -123,6 +127,18 @@ bCanHitReact(true)
    GetMesh()->SetCollisionResponseToChannel(
    ECollisionChannel::ECC_Visiblity, 
    ECollisionChannel::ECR_Block);
+   
+   FVector WorldPatrolPoint = UKismetMathLibrary::TransformLoaction(
+   GetActorTransform(), WorldPatrolPoint);
+   
+   // Get Controller
+   EnemyController = Cast<AEnemyController>(GetController());
+   
+   if(EnemyController)
+   {
+      EnemyController->GetBlackBoardComponent->SetValueAsVector(TEXT("PatrolPoint"), WorldPatrolPoint);
+      EnemyController->RunBehaviorTree(BehaviorTree);
+   }
    
 }
 
