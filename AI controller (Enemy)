@@ -43,6 +43,7 @@ Public:
       
       
 #include "EnemyController.h"
+#include "Enemy.h"
 
 
 void AEnemyController::AEnemyController()
