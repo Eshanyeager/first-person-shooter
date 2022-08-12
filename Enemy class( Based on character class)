@@ -50,6 +50,23 @@ protected:
    
    void SetStunned(bool Stunned);
    
+   // For attack overlap 
+   UFUNCTION(BlueprintCallable) 
+   Void AttackShpereOverlap(UPrimitiveComponent* PrimitiveComponent, 
+   AActor* OtherActor, 
+   UPrimitiveComponent* OtherComp, 
+   int32 OtherBodyIndex, 
+   bool bFromSweep, 
+   FHitResult& SweepHitResult);
+   
+   UFUNCTION(BlueprintCallable) 
+   Void AttackEndShpereOverlap(UPrimitiveComponent* PrimitiveComponent, 
+   AActor* OtherActor, 
+   UPrimitiveComponent* OtherComp, 
+   int32 OtherBodyIndex,);
+   
+   void PlayAttackMontage(FName );
+   
 private:
    
    // Sound to when hit by bullet
@@ -108,6 +125,24 @@ private:
    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stunned, meta =(AllowPrivateAccess= "true"))
    float StunChance;
    
+   // true when in attack range
+   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stunned, meta =(AllowPrivateAccess= "true"))
+   bool bAttackRange;
+   
+   // Shpere for attack 
+   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stunned, meta =(AllowPrivateAccess= "true"))
+   USphereComponent* AttackShpere;
+   
+   // Enemy attack montage
+   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "Combat", meta = (AllowPrivateAccess ="true")) 
+   UAnimMontage* PlayAttackMontage(FName Section, float PlayRate);
+   
+   // different Attack to play in montage 
+   FName AttackL;
+   FName AttackR;
+   FName AttackLFast;
+   FName AttackRFast;
+   
 public:
    // Called every frame
    virtual void Tick(float DeltaTime) override;
@@ -135,6 +170,10 @@ public:
 #include "Kismet/GameplayStatics.h"
 #include "Sound/SoundCue.h"
 #include "Particles/ParticleSystem.h"
+#include "Kismet/KismetMathLibrary.h"
+#include "BehaviorTree/BlackBoardComponent.h"
+#include "EnemyController.h"
+#include "Components/CapsuleComponent.h"
 
 
 // Sets default value
@@ -152,6 +191,9 @@ StunChance(0.5f)
    
    AgroShpere = CreateDefaultSubobject<USphereComponent>(TEXT("Agro Shpere));
    AgroShpere->SetupAttachment(GetRootComponent);
+   
+   AttackShpere = CreateDefaultSubobject<USphereComponent>(TEXT("Attack Shpere));
+   AttackShpere->SetupAttachment(GetRootComponent);
 }
 
 // Called this when the game starts or when spawned
@@ -160,11 +202,21 @@ AEnemy::BeginPlay()
    Super::BeginPlay();
    
    AgroSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::AgroShpereOverlap);
+   AttackShpere->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::AttackShpereOverlap);
+   AttackShpere->OnComponentEndOverlap.AddDynamic(this, &AEnemy::AttackEndShpereOverlap);
    
    GetMesh()->SetCollisionResponseToChannel(
    ECollisionChannel::ECC_Visiblity, 
    ECollisionChannel::ECR_Block);
    
+   GetMesh()->SetCollisionResponseToChannel(
+   ECollisionChannel::ECC_Camera, 
+   ECollisionChannel::ECR_Ignore);
+   
+   GetCapsuleComponent()->SetCollisionResponseToChannel(
+   ECollisionChannel::ECC_Camera, 
+   ECollisionChannel::ECR_Ignore);
+  
    // Get Controller
    EnemyController = Cast<AEnemyController>(GetController());
    
@@ -285,6 +337,38 @@ void AEnemy::AgroShpereOverlap(UPrimitiveComponent* OverlapComponent,
       EnemyController->GetBlackBoardComponent()->SetValueAsObject(TETX("Target"), Character);
    {
    
+}
+
+void AEnemy::AttackShpereOverlap(UPrimitiveComponent* OverlapComponent, AActor* OtherActor, 
+UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSeeep, FHitResult& SweepResult) 
+{
+   if(OtherActor == nullptr) return;
+   
+   auto Character = Cast<AShooterCharacter>(OtherActor);
+   if(Character) 
+   {
+      bAttackRange = true;
+      if(EnemyController)
+      {
+         EnemyController->GetBlackBoardComponent()->SetValueAsBool(TETX("InAttackRange"), true);
+      }
+   }
+}
+
+void AEnemy::AttackEndShpereOverlap(UPrimitiveComponent* OverlapComponent, AActor* OtherActor, 
+UPrimitiveComponent* OtherComp, int32 OtherBodyIndex) 
+{
+   if(OtherActor == nullptr) return;
+   
+   auto Character = Cast<AShooterCharacter>(OtherActor);
+   if(Character) 
+   {
+      bAttackRange = false;
+      if(EnemyController)
+      {
+         EnemyController->GetBlackBoardComponent()->SetValueAsBool(TETX("InAttackRange"), false);
+      }
+   }
 }
 
 
