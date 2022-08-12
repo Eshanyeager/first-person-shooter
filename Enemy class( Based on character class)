@@ -48,6 +48,8 @@ protected:
    bool bFromSweep, 
    FHitResult& SweepHitResult);
    
+   void SetStunned(bool Stunned);
+   
 private:
    
    // Sound to when hit by bullet
@@ -98,6 +100,14 @@ private:
    UPROPERTY(EditAnyWhere, BlueprintReadOnly, Category = combat, meta = (AllowPrivateAccess = "true")) 
    class USphereComponent* AgroSphere;
    
+   // true when Play hit react montage
+   UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Stunned, meta =(AllowPrivateAccess= "true")) 
+   bool bStunned;
+   
+   // Chance of being stunned
+   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Stunned, meta =(AllowPrivateAccess= "true"))
+   float StunChance;
+   
 public:
    // Called every frame
    virtual void Tick(float DeltaTime) override;
@@ -134,10 +144,22 @@ MaxHealth(100.f),
 HealthBarDisplayTime(4.f), 
 HitReactMin(.5f),
 HitReactMax(1.f),
-bCanHitReact(true)
+bCanHitReact(true), 
+StunChance(0.5f)
 {
    // Set this character to call tick() every frame. you can turn this off to improve performance
    PrimaryActorTick.bCanEverTick = true;
+   
+   AgroShpere = CreateDefaultSubobject<USphereComponent>(TEXT("Agro Shpere));
+   AgroShpere->SetupAttachment(GetRootComponent);
+}
+
+// Called this when the game starts or when spawned
+AEnemy::BeginPlay() 
+{
+   Super::BeginPlay();
+   
+   AgroSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::AgroShpereOverlap);
    
    GetMesh()->SetCollisionResponseToChannel(
    ECollisionChannel::ECC_Visiblity, 
@@ -158,17 +180,15 @@ bCanHitReact(true)
       EnemyController->GetBlackBoardComponent->SetValueAsVector(TEXT("PatrolPoint2"), WorldPatrolPoint2);
       EnemyController->RunBehaviorTree(BehaviorTree);
    }
-   
-   AgroShpere = CreateDefaultSubobject<USphereComponent>(TEXT("Agro Shpere));
-   AgroShpere->SetupAttachment(GetRootComponent);
 }
 
-// Called this when the game starts or when spawned
-AEnemy::BeginPlay() 
+void AEnemy::SetStunned(bool Stunned) 
 {
-   Super::BeginPlay();
-   
-   AgroSphere->OnComponentBeginOverlap.AddDynamic(this, &AEnemy::AgroShpereOverlap);
+   bStunned = Stunned;
+   if(EnemyController) 
+   {
+      EnemyController->GetBlackBoardComponent()->SetValueAsBool(TEXT("IsStunned")); 
+   }
 }
 
 // Called every frame
@@ -195,7 +215,14 @@ AEnemy::BulletHit_Implementation(FHitResult HitResult)
      UGameplayStatics::SpawnEmitterAtLocation(GetWorld(), ImpactParticles, HitResult.Location, FRotator(0.f), true);
    }
    ShowHealthBar();
-   PlayHitMontage(FName("HitReactFront"));
+   // Determine the bullet hit stun
+   const float Stunned{ FMath::FRandRange(0.f, 1.f};
+   if(Stunned <= StunChance) 
+   {
+      // Stun the enemy
+      PlayHitMontage(FName("HitReactFront"));
+      SetStunned(true);
+   }
 }
 
 float AEnemy::TakeDamage(float DamageAmount, 
