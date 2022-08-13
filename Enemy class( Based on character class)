@@ -65,7 +65,11 @@ protected:
    UPrimitiveComponent* OtherComp, 
    int32 OtherBodyIndex,);
    
-   void PlayAttackMontage(FName );
+   UFUNCTION(BlueprintCallable) 
+   void PlayAttackMontage(FName Section);
+   
+   UFUNCTION(BlueprintCallable) 
+   FName GetMontageSection();
    
 private:
    
@@ -369,6 +373,38 @@ UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
          EnemyController->GetBlackBoardComponent()->SetValueAsBool(TETX("InAttackRange"), false);
       }
    }
+}
+
+void AEnemy::PlayAttackMontage(FName Section, float PlayRate) 
+{
+   UAnimInatance* AnimInstance = GetMesh()->GetAnimInstance();
+   if(AnimInstance && AttackMontage) 
+   {
+      AnimInstance->Montage_Play(AttackMontage);
+      AnimInstance->Montage-JumpToSection(AttackMontage, Section);
+   }
+}
+
+FName AEnemy::GetMontageSection() 
+{
+   FName SectionName;
+   const int32 Section{ FMath::FRandRange(1, 4);
+   Switch(Section)
+   {
+      case 1:
+         SectionName = AttackL;
+         break;
+      case 2:
+         SectionName = AttackR;
+         break;
+      case 3:
+         SectionName = AttackLFast;
+         break;
+      case 4:
+         SectionName = AttackRFast;
+         break;
+   }
+   return SectionName;
 }
 
 
