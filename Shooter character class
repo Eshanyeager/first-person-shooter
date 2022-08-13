@@ -26,6 +26,9 @@ class ShooterCharacterPROJECT_API AShooterCharacter : public ACharacter
 public:
     // Sets default values for this character's properties
     ShooterCharacter();
+    
+    virtual float TakeDamage(float DamageAmount, struct FDamageEvent const& DamageEvent, 
+    class AController* EventInstigater, AActor* DamageCause);
 
 protected:
     // Called when the game starts or when spawned
@@ -295,6 +298,13 @@ private:
     float CrouchingGroundFriction;
     
     bool bAimingButtonPressed;
+    
+    // Characters health
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true")) 
+    float Health;
+    
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true")) 
+    float MaxHealth;
     
 Public:
     //returns CameraBoom subobject
@@ -1210,6 +1220,20 @@ void AShooterCharacter::InterpCapsuleHalfHeight(float DeltaTime)
    GetMesh()->AddLocalOffset(MeshOffset);
    
    GetCapsuleComponent()->SetCapsuleHalfHeight(InterpHalfHeight);     
+}
+
+float AShooterCharacter::TakeDamage(float DamageAmount, FDamageEvent const& DamageEvent, 
+AController* EventInstigator, AActor* DamageCauser)
+{
+   if(Health - DamageAmount <= 0.f) 
+   {
+      Health = 0.f;
+   }
+   else
+   {
+      Health -= DamageAmount;
+   }
+   return DamageAmount;
 }
 
 
