@@ -85,6 +85,13 @@ protected:
    UPrimitiveComponent* OtherComp, 
    int32 OtherBodyIndex);
    
+   // Activate/Deactivate colision for weapon boxes
+   UFUNCTION(BlueprintCallable)
+   void ActivateLeftWeapon();
+   void DeActivateLeftWeapon();
+   void ActivateRightWeapon();
+   void DeActivateRightWeapon();
+   
 private:
    
    // Sound to when hit by bullet
@@ -463,6 +470,26 @@ void AEnemy::OnRightWeaponOverlap(UPrimitiveComponent* OverlapComponent, AActor*
 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, FHitResult& SweepResult);
 {
 
+}
+
+void AEnemy::ActivateLeftWeapon()
+{
+   LeftWeaponCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
+void AEnemy::DeActivateLeftWeapon()
+{
+   LeftWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+}
+
+void AEnemy::ActivateRightWeapon()
+{
+   RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::QueryOnly);
+}
+
+void AEnemy::DeActivateRightWeapon()
+{
+   RightWeaponCollision->SetCollisionEnabled(ECollisionEnabled::NoCollision);
 }
 
 
