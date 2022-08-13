@@ -92,6 +92,9 @@ protected:
    void ActivateRightWeapon();
    void DeActivateRightWeapon();
    
+   // Enemy do damage to the character
+   void DoDamage(AActor* Victim);
+   
 private:
    
    // Sound to when hit by bullet
@@ -175,6 +178,10 @@ private:
    UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Combat, meta =(AllowPrivateAccess = "true"))
    UBoxComponent* RightWeaponCollision;
    
+   // Base damage done by enemy
+   UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Combat, meta = (AllowPrivateAccess = "true")) 
+   float BaseDamage;
+   
    
 public:
    // Called every frame
@@ -217,7 +224,8 @@ HealthBarDisplayTime(4.f),
 HitReactMin(.5f),
 HitReactMax(1.f),
 bCanHitReact(true), 
-StunChance(0.5f)
+StunChance(0.5f), 
+BaseDamage(20.f) 
 {
    // Set this character to call tick() every frame. you can turn this off to improve performance
    PrimaryActorTick.bCanEverTick = true;
@@ -460,16 +468,32 @@ FName AEnemy::GetMontageSection()
    return SectionName;
 }
 
+void AEnemy::DoDamage(AActor* Victim)
+{
+   if(Victim == nullptr) return;
+   
+   auto Character = Cast<AShooterCharacter>(Victim);
+   if(Character) 
+   {
+      UGamePlayStatics::ApplyDamage(
+      Character, 
+      BaseDamage, 
+      EnemyController, 
+      this, 
+      DamageType::StaticClass;
+   }
+}
+
 void AEnemy::OnLeftWeaponOverlap(UPrimitiveComponent* OverlapComponent, AActor* OtherActor, 
 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, FHitResult& SweepResult);
 {
-
+   DoDamage();
 }
 
 void AEnemy::OnRightWeaponOverlap(UPrimitiveComponent* OverlapComponent, AActor* OtherActor, 
 UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, FHitResult& SweepResult);
 {
-
+   DoDamage();
 }
 
 void AEnemy::ActivateLeftWeapon()
